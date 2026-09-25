@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const secciones = {
         "torre": document.getElementById("seccion-torre"),
         "hospitalizacion": document.getElementById("seccion-hospitalizacion"),
-        "emergencia": document.getElementById("seccion-emergencia")
+        "resumen": document.getElementById("seccion-resumen")
     };
 
     const modalIngreso = document.getElementById("modal-ingreso");
@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const tituloFichaPaciente = document.getElementById("titulo-ficha-paciente");
     const btnGuardarFicha = document.getElementById("btn-guardar-ficha");
+    const textoPaseWhatsApp = document.getElementById("texto-pase-whatsapp");
 
     const habitaciones = ["218", "219", "220", "221", "222", "223", "224"];
     const letras = ["A", "B"];
@@ -32,10 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
             Object.keys(secciones).forEach(sec => {
                 secciones[sec].style.display = (sec === tabName) ? "block" : "none";
             });
+
+            if (tabName === "resumen") generarPaseWhatsApp();
         });
     });
 
-    // Renderizar grilla de camas
     function renderCenso() {
         gridCamas.innerHTML = "";
         modalSelectCama.innerHTML = "";
@@ -43,8 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         habitaciones.forEach(hab => {
             letras.forEach(letra => {
                 const numCama = `${hab}-${letra}`;
-                
-                // Llenar selector del modal
                 const option = document.createElement("option");
                 option.value = numCama;
                 option.textContent = `Cama ${numCama}`;
@@ -70,10 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
                 }
 
-                card.addEventListener("click", () => {
-                    abrirFichaPaciente(numCama);
-                });
-
+                card.addEventListener("click", () => abrirFichaPaciente(numCama));
                 gridCamas.appendChild(card);
             });
         });
@@ -83,15 +80,14 @@ document.addEventListener("DOMContentLoaded", () => {
         camaActiva = numCama;
         const paciente = pacientesData[numCama];
 
-        // Cambiar a la pestaña de hospitalización
         navButtons.forEach(b => b.classList.remove("active"));
         document.querySelector('[data-tab="hospitalizacion"]').classList.add("active");
         secciones.torre.style.display = "none";
         secciones.hospitalizacion.style.display = "block";
-        secciones.emergencia.style.display = "none";
+        secciones.resumen.style.display = "none";
 
         if (paciente) {
-            tituloFichaPaciente.textContent = `📋 Ficha de Cama ${numCama}: ${paciente.nombre} (HC: ${paciente.hc})`;
+            tituloFichaPaciente.textContent = `📋 Cama ${numCama}: ${paciente.nombre} (HC: ${paciente.hc})`;
             document.getElementById("txt-tratamiento-habitual").value = paciente.tratamientoHabitual || "";
             document.getElementById("q-abordaje").value = paciente.abordaje || "Laparoscópica";
             document.getElementById("q-tecnica").value = paciente.tecnica || "";
@@ -104,15 +100,22 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("lab-lactato").value = paciente.lactato || "";
             document.getElementById("lab-inr").value = paciente.inr || "";
             document.getElementById("txt-indicaciones").value = paciente.indicaciones || "";
+            
+            document.getElementById("chk-hta").checked = paciente.hta || false;
+            document.getElementById("chk-dm2").checked = paciente.dm2 || false;
+            document.getElementById("chk-irc").checked = paciente.irc || false;
+            document.getElementById("riesgo-cardio").checked = paciente. rCardio || false;
+            document.getElementById("riesgo-anestesia").checked = paciente.rAnestesia || false;
+            document.getElementById("riesgo-neumo").checked = paciente.rNeumo || false;
+            document.getElementById("riesgo-nefro").checked = paciente.rNefro || false;
         } else {
-            tituloFichaPaciente.textContent = `📋 Cama ${numCama} - Sin paciente asignado. Registre datos abajo:`;
+            tituloFichaPaciente.textContent = `📋 Cama ${numCama} - Sin paciente asignado.`;
             document.getElementById("txt-tratamiento-habitual").value = "";
             document.getElementById("q-tecnica").value = "";
             document.getElementById("txt-indicaciones").value = "";
         }
     }
 
-    // Modal de ingreso
     btnIngresoGeneral.addEventListener("click", () => { modalIngreso.style.display = "block"; });
     cerrarModal.addEventListener("click", () => { modalIngreso.style.display = "none"; });
 
@@ -123,32 +126,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const dx = document.getElementById("modal-dx").value;
 
         if (!nombre) {
-            alert("Por favor ingrese el nombre del paciente.");
+            alert("Ingrese el nombre del paciente.");
             return;
         }
 
-        pacientesData[camaSel] = {
-            nombre,
-            hc: hc || "S/N",
-            diagnostico: dx || "Evaluación por cirugía",
-            riesgo: "verde"
-        };
-
+        pacientesData[camaSel] = { nombre, hc: hc || "S/N", diagnostico: dx || "En estudio", riesgo: "verde" };
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
         modalIngreso.style.display = "none";
         renderCenso();
         abrirFichaPaciente(camaSel);
     });
 
-    // Guardar Ficha Clínica
     btnGuardarFicha.addEventListener("click", () => {
-        if (!camaActiva) {
-            alert("Seleccione una cama primero.");
-            return;
-        }
-
+        if (!camaActiva) return;
         if (!pacientesData[camaActiva]) {
-            pacientesData[camaActiva] = { nombre: "Paciente Cama " + camaActiva, hc: "S/N", diagnostico: "En estudio", riesgo: "verde" };
+            pacientesData[camaActiva] = { nombre: "Paciente " + camaActiva, hc: "S/N", diagnostico: "En estudio", riesgo: "verde" };
         }
 
         pacientesData[camaActiva].tratamientoHabitual = document.getElementById("txt-tratamiento-habitual").value;
@@ -164,18 +156,43 @@ document.addEventListener("DOMContentLoaded", () => {
         pacientesData[camaActiva].inr = document.getElementById("lab-inr").value;
         pacientesData[camaActiva].indicaciones = document.getElementById("txt-indicaciones").value;
 
+        pacientesData[camaActiva].hta = document.getElementById("chk-hta").checked;
+        pacientesData[camaActiva].dm2 = document.getElementById("chk-dm2").checked;
+        pacientesData[camaActiva].irc = document.getElementById("chk-irc").checked;
+        pacientesData[camaActiva].rCardio = document.getElementById("riesgo-cardio").checked;
+        pacientesData[camaActiva].rAnestesia = document.getElementById("riesgo-anestesia").checked;
+        pacientesData[camaActiva].rNeumo = document.getElementById("riesgo-neumo").checked;
+        pacientesData[camaActiva].rNefro = document.getElementById("riesgo-nefro").checked;
+
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Datos del paciente guardados exitosamente en la nube local!");
+        alert("¡Ficha clínica y quirúrgica guardada con éxito!");
     });
+
+    function generarPaseWhatsApp() {
+        let total = 0;
+        let detalle = "";
+        Object.keys(pacientesData).forEach(cama => {
+            if (pacientesData[cama].nombre) {
+                total++;
+                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} | Dx: ${pacientesData[cama].diagnostico}`;
+            }
+        });
+
+        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes en servicio.\n${detalle}\n\n⚠️ Revisar pendientes clínicos en el sistema.`;
+    }
 
     renderCenso();
 });
 
-// Función global para cambiar sub-pestañas
 function cambiarSubTab(num) {
     document.querySelectorAll('.subtab-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
-    
     document.getElementById(`subtab-content-${num}`).style.display = 'block';
     event.currentTarget.classList.add('active');
+}
+
+function copiarPaseWhatsApp() {
+    const texto = document.getElementById("texto-pase-whatsapp").textContent;
+    navigator.clipboard.writeText(texto);
+    alert("¡Pase de guardia copiado al portapapeles! Listo para pegar en WhatsApp.");
 }
