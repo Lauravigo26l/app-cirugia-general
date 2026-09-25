@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const secciones = {
         "torre": document.getElementById("seccion-torre"),
         "hospitalizacion": document.getElementById("seccion-hospitalizacion"),
+        "quirofano": document.getElementById("seccion-quirofano"),
+        "escalas": document.getElementById("seccion-escalas"),
         "resumen": document.getElementById("seccion-resumen")
     };
 
@@ -16,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const tituloFichaPaciente = document.getElementById("titulo-ficha-paciente");
     const btnGuardarFicha = document.getElementById("btn-guardar-ficha");
     const textoPaseWhatsApp = document.getElementById("texto-pase-whatsapp");
-    const spanAlertaTexto = document.getElementById("span-alerta-texto");
 
     const habitaciones = ["218", "219", "220", "221", "222", "223", "224"];
     const letras = ["A", "B"];
@@ -56,11 +57,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 if (paciente) {
                     card.classList.add(paciente.riesgo || "verde");
+                    const estadoAlta = paciente.aptoAlta ? "🌟 [APTO PARA ALTA]" : "";
                     card.innerHTML = `
                         <h3>Cama ${numCama} <span>🔴</span></h3>
                         <p><strong>Paciente:</strong> ${paciente.nombre}</p>
                         <p><strong>HC:</strong> ${paciente.hc}</p>
                         <p><strong>Dx:</strong> ${paciente.diagnostico || 'Sin diagnóstico'}</p>
+                        <p style="color:#b91c1c; font-weight:bold;">${estadoAlta}</p>
                     `;
                 } else {
                     card.innerHTML = `
@@ -82,94 +85,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
         navButtons.forEach(b => b.classList.remove("active"));
         document.querySelector('[data-tab="hospitalizacion"]').classList.add("active");
-        secciones.torre.style.display = "none";
-        secciones.hospitalizacion.style.display = "block";
-        secciones.resumen.style.display = "none";
+        Object.keys(secciones).forEach(sec => secciones[sec].style.display = (sec === "hospitalizacion") ? "block" : "none");
 
         if (paciente) {
             tituloFichaPaciente.textContent = `📋 Cama ${numCama}: ${paciente.nombre} (HC: ${paciente.hc})`;
+            document.getElementById("hc-motivo").value = paciente.motivo || "";
+            document.getElementById("hc-tiempo").value = paciente.tiempoEnf || "";
+            document.getElementById("hc-relato").value = paciente.relato || "";
+            document.getElementById("hc-apoyo").value = paciente.apoyoDiag || "";
+            document.getElementById("hc-plan-inicial").value = paciente.planInicial || "Se opera de emergencia";
             
-            // Admisión
-            document.getElementById("adm-procedencia").value = paciente.procedencia || "";
-            document.getElementById("adm-t-enf").value = paciente.tEnf || "";
-            document.getElementById("adm-inicio").value = paciente.inicio || "";
-            document.getElementById("adm-relato").value = paciente.relato || "";
-            document.getElementById("fv-pa").value = paciente.pa || "";
-            document.getElementById("fv-fc").value = paciente.fc || "";
-            document.getElementById("fv-fr").value = paciente.fr || "";
-            document.getElementById("fv-t").value = paciente.t || "";
-            document.getElementById("fv-sat").value = paciente.sat || "";
-            document.getElementById("fv-glasgow").value = paciente.glasgow || "";
-            document.getElementById("adm-conducta").value = paciente.conducta || "Observación";
-
-            // Comorbilidades & Tratamientos
-            document.getElementById("chk-hta").checked = paciente.hta || false;
-            document.getElementById("trat-hta").value = paciente.tratHta || "";
-            document.getElementById("chk-dm2").checked = paciente.dm2 || false;
-            document.getElementById("trat-dm2").value = paciente.tratDm2 || "";
-            document.getElementById("chk-irc").checked = paciente.irc || false;
-            document.getElementById("trat-irc").value = paciente.tratIrc || "";
-            document.getElementById("chk-epoc").checked = paciente.epoc || false;
-            document.getElementById("trat-epoc").value = paciente.tratEpoc || "";
-            document.getElementById("txt-ant-quirurgicos").value = paciente.antQuirurgicos || "";
-
-            // Riesgos
-            document.getElementById("riesgo-cardio").checked = paciente.rCardio || false;
-            document.getElementById("sug-cardio").value = paciente.sugCardio || "";
-            document.getElementById("riesgo-anestesia").checked = paciente.rAnestesia || false;
-            document.getElementById("sug-anestesia").value = paciente.sugAnestesia || "";
-            document.getElementById("riesgo-nefro").checked = paciente.rNefro || false;
-            document.getElementById("sug-nefro").value = paciente.sugNefro || "";
-
-            // Alergias y Anticoagulantes
-            document.getElementById("txt-alergias").value = paciente.alergias || "NINGUNA REGISTRADA";
-            spanAlertaTexto.textContent = paciente.alergias || "NINGUNA REGISTRADA";
-            document.getElementById("txt-anticoag").value = paciente.anticoag || "";
-
-            // Quirófano
-            document.getElementById("q-procedimiento").value = paciente.procedimiento || "Apendicectomía Laparoscópica";
-            document.getElementById("q-abordaje").value = paciente.abordaje || "Laparoscópica";
-            document.getElementById("q-h-inicio").value = paciente.hInicio || "";
-            document.getElementById("q-h-fin").value = paciente.hFin || "";
-            document.getElementById("q-t-op").value = paciente.tOp || "";
-            document.getElementById("q-herida").value = paciente.herida || "Limpia";
-            document.getElementById("q-cirujano").value = paciente.cirujano || "";
-            document.getElementById("q-ayudante").value = paciente.ayudante || "";
-            document.getElementById("q-anestesiologo").value = paciente.anestesiologo || "";
-            document.getElementById("q-hallazgos").value = paciente.hallazgos || "";
-            document.getElementById("q-tecnica").value = paciente.tecnica || "";
-            document.getElementById("q-drenaje").value = paciente.drenaje || "";
-            document.getElementById("q-debito-24h").value = paciente.debito24h || "";
-
-            // Laboratorio Columnas
-            document.getElementById("lab-d1-hb").value = paciente.d1Hb || "";
-            document.getElementById("lab-d1-leuco").value = paciente.d1Leuco || "";
-            document.getElementById("lab-d1-cay").value = paciente.d1Cay || "";
-            document.getElementById("lab-d1-creat").value = paciente.d1Creat || "";
-            document.getElementById("lab-d1-lac").value = paciente.d1Lac || "";
-            document.getElementById("lab-d1-inr").value = paciente.d1Inr || "";
-
-            document.getElementById("lab-d2-hb").value = paciente.d2Hb || "";
-            document.getElementById("lab-d2-leuco").value = paciente.d2Leuco || "";
-            document.getElementById("lab-d2-cay").value = paciente.d2Cay || "";
-            document.getElementById("lab-d2-creat").value = paciente.d2Creat || "";
-            document.getElementById("lab-d2-lac").value = paciente.d2Lac || "";
-            document.getElementById("lab-d2-inr").value = paciente.d2Inr || "";
-
-            document.getElementById("lab-d3-hb").value = paciente.d3Hb || "";
-            document.getElementById("lab-d3-leuco").value = paciente.d3Leuco || "";
-            document.getElementById("lab-d3-cay").value = paciente.d3Cay || "";
-            document.getElementById("lab-d3-creat").value = paciente.d3Creat || "";
-            document.getElementById("lab-d3-lac").value = paciente.d3Lac || "";
-            document.getElementById("lab-d3-inr").value = paciente.d3Inr || "";
-
-            // Tratamiento y Alta
+            document.getElementById("tr-hta").value = paciente.trHta || "";
+            document.getElementById("tr-dm2").value = paciente.trDm2 || "";
+            document.getElementById("tr-irc").value = paciente.trIrc || "";
+            document.getElementById("ant-quirurgicos").value = paciente.antQuirurgicos || "";
+            
+            document.getElementById("r-cardio-det").value = paciente.rCardioDet || "";
+            document.getElementById("r-anes-det").value = paciente.rAnesDet || "";
+            document.getElementById("r-nefro-det").value = paciente.rNefroDet || "";
+            document.getElementById("alergia-intensa").value = paciente.alergiaIntensa || "";
+            document.getElementById("anticoag-farma").value = paciente.anticoagFarma || "";
+            document.getElementById("anticoag-ultima").value = paciente.anticoagUltima || "";
+            
+            document.getElementById("lab-col-hb").value = paciente.labHb || "";
+            document.getElementById("lab-col-leuco").value = paciente.labLeuco || "";
+            document.getElementById("lab-col-cayados").value = paciente.labCayados || "";
+            document.getElementById("lab-col-plaquetas").value = paciente.labPlaquetas || "";
+            document.getElementById("lab-col-creat").value = paciente.labCreat || "";
+            document.getElementById("lab-col-lactato").value = paciente.labLactato || "";
+            
             if(paciente.indicaciones) document.getElementById("txt-indicaciones").value = paciente.indicaciones;
-            document.getElementById("txt-pendientes").value = paciente.pendientes || "";
-            document.getElementById("chk-criterio-alta").checked = paciente.criterioAlta || false;
+            document.getElementById("chk-alta").checked = paciente.aptoAlta || false;
             document.getElementById("txt-indicaciones-alta").value = paciente.indAlta || "";
+            
+            document.getElementById("chk-hta").checked = paciente.hta || false;
+            document.getElementById("chk-dm2").checked = paciente.dm2 || false;
+            document.getElementById("chk-irc").checked = paciente.irc || false;
+            document.getElementById("r-cardio-chk").checked = paciente.rCardioChk || false;
+            document.getElementById("r-anes-chk").checked = paciente.rAnesChk || false;
+            document.getElementById("r-nefro-chk").checked = paciente.rNefroChk || false;
         } else {
             tituloFichaPaciente.textContent = `📋 Cama ${numCama} - Sin paciente asignado.`;
+            document.querySelectorAll(".paciente-detalle-container input[type='text'], .paciente-detalle-container textarea").forEach(el => el.value = "");
+            document.querySelectorAll(".paciente-detalle-container input[type='checkbox']").forEach(el => el.checked = false);
         }
     }
 
@@ -200,102 +158,61 @@ document.addEventListener("DOMContentLoaded", () => {
             pacientesData[camaActiva] = { nombre: "Paciente " + camaActiva, hc: "S/N", diagnostico: "En estudio", riesgo: "verde" };
         }
 
-        // Guardar Admisión
-        pacientesData[camaActiva].procedencia = document.getElementById("adm-procedencia").value;
-        pacientesData[camaActiva].tEnf = document.getElementById("adm-t-enf").value;
-        pacientesData[camaActiva].inicio = document.getElementById("adm-inicio").value;
-        pacientesData[camaActiva].relato = document.getElementById("adm-relato").value;
-        pacientesData[camaActiva].pa = document.getElementById("fv-pa").value;
-        pacientesData[camaActiva].fc = document.getElementById("fv-fc").value;
-        pacientesData[camaActiva].fr = document.getElementById("fv-fr").value;
-        pacientesData[camaActiva].t = document.getElementById("fv-t").value;
-        pacientesData[camaActiva].sat = document.getElementById("fv-sat").value;
-        pacientesData[camaActiva].glasgow = document.getElementById("fv-glasgow").value;
-        pacientesData[camaActiva].conducta = document.getElementById("adm-conducta").value;
-
-        // Comorbilidades y Tratamientos
-        pacientesData[camaActiva].hta = document.getElementById("chk-hta").checked;
-        pacientesData[camaActiva].tratHta = document.getElementById("trat-hta").value;
-        pacientesData[camaActiva].dm2 = document.getElementById("chk-dm2").checked;
-        pacientesData[camaActiva].tratDm2 = document.getElementById("trat-dm2").value;
-        pacientesData[camaActiva].irc = document.getElementById("chk-irc").checked;
-        pacientesData[camaActiva].tratIrc = document.getElementById("trat-irc").value;
-        pacientesData[camaActiva].epoc = document.getElementById("chk-epoc").checked;
-        pacientesData[camaActiva].tratEpoc = document.getElementById("trat-epoc").value;
-        pacientesData[camaActiva].antQuirurgicos = document.getElementById("txt-ant-quirurgicos").value;
-
-        // Riesgos
-        pacientesData[camaActiva].rCardio = document.getElementById("riesgo-cardio").checked;
-        pacientesData[camaActiva].sugCardio = document.getElementById("sug-cardio").value;
-        pacientesData[camaActiva].rAnestesia = document.getElementById("riesgo-anestesia").checked;
-        pacientesData[camaActiva].sugAnestesia = document.getElementById("sug-anestesia").value;
-        pacientesData[camaActiva].rNefro = document.getElementById("riesgo-nefro").checked;
-        pacientesData[camaActiva].sugNefro = document.getElementById("sug-nefro").value;
-
-        // Alergias
-        const alergiaVal = document.getElementById("txt-alergias").value;
-        pacientesData[camaActiva].alergias = alergiaVal;
-        spanAlertaTexto.textContent = alergiaVal;
-        pacientesData[camaActiva].anticoag = document.getElementById("txt-anticoag").value;
-
-        // Quirófano
-        pacientesData[camaActiva].procedimiento = document.getElementById("q-procedimiento").value;
-        pacientesData[camaActiva].abordaje = document.getElementById("q-abordaje").value;
-        pacientesData[camaActiva].hInicio = document.getElementById("q-h-inicio").value;
-        pacientesData[camaActiva].hFin = document.getElementById("q-h-fin").value;
-        pacientesData[camaActiva].tOp = document.getElementById("q-t-op").value;
-        pacientesData[camaActiva].herida = document.getElementById("q-herida").value;
-        pacientesData[camaActiva].cirujano = document.getElementById("q-cirujano").value;
-        pacientesData[camaActiva].ayudante = document.getElementById("q-ayudante").value;
-        pacientesData[camaActiva].anestesiologo = document.getElementById("q-anestesiologo").value;
-        pacientesData[camaActiva].hallazgos = document.getElementById("q-hallazgos").value;
-        pacientesData[camaActiva].tecnica = document.getElementById("q-tecnica").value;
-        pacientesData[camaActiva].drenaje = document.getElementById("q-drenaje").value;
-        pacientesData[camaActiva].debito24h = document.getElementById("q-debito-24h").value;
-
-        // Lab Columnas
-        pacientesData[camaActiva].d1Hb = document.getElementById("lab-d1-hb").value;
-        pacientesData[camaActiva].d1Leuco = document.getElementById("lab-d1-leuco").value;
-        pacientesData[camaActiva].d1Cay = document.getElementById("lab-d1-cay").value;
-        pacientesData[camaActiva].d1Creat = document.getElementById("lab-d1-creat").value;
-        pacientesData[camaActiva].d1Lac = document.getElementById("lab-d1-lac").value;
-        pacientesData[camaActiva].d1Inr = document.getElementById("lab-d1-inr").value;
-
-        pacientesData[camaActiva].d2Hb = document.getElementById("lab-d2-hb").value;
-        pacientesData[camaActiva].d2Leuco = document.getElementById("lab-d2-leuco").value;
-        pacientesData[camaActiva].d2Cay = document.getElementById("lab-d2-cay").value;
-        pacientesData[camaActiva].d2Creat = document.getElementById("lab-d2-creat").value;
-        pacientesData[camaActiva].d2Lac = document.getElementById("lab-d2-lac").value;
-        pacientesData[camaActiva].d2Inr = document.getElementById("lab-d2-inr").value;
-
-        pacientesData[camaActiva].d3Hb = document.getElementById("lab-d3-hb").value;
-        pacientesData[camaActiva].d3Leuco = document.getElementById("lab-d3-leuco").value;
-        pacientesData[camaActiva].d3Cay = document.getElementById("lab-d3-cay").value;
-        pacientesData[camaActiva].d3Creat = document.getElementById("lab-d3-creat").value;
-        pacientesData[camaActiva].d3Lac = document.getElementById("lab-d3-lac").value;
-        pacientesData[camaActiva].d3Inr = document.getElementById("lab-d3-inr").value;
-
-        // Tratamiento y Alta
+        pacientesData[camaActiva].motivo = document.getElementById("hc-motivo").value;
+        pacientesData[camaActiva].tiempoEnf = document.getElementById("hc-tiempo").value;
+        pacientesData[camaActiva].relato = document.getElementById("hc-relato").value;
+        pacientesData[camaActiva].apoyoDiag = document.getElementById("hc-apoyo").value;
+        pacientesData[camaActiva].planInicial = document.getElementById("hc-plan-inicial").value;
+        
+        pacientesData[camaActiva].trHta = document.getElementById("tr-hta").value;
+        pacientesData[camaActiva].trDm2 = document.getElementById("tr-dm2").value;
+        pacientesData[camaActiva].trIrc = document.getElementById("tr-irc").value;
+        pacientesData[camaActiva].antQuirurgicos = document.getElementById("ant-quirurgicos").value;
+        
+        pacientesData[camaActiva].rCardioDet = document.getElementById("r-cardio-det").value;
+        pacientesData[camaActiva].rAnesDet = document.getElementById("r-anes-det").value;
+        pacientesData[camaActiva].rNefroDet = document.getElementById("r-nefro-det").value;
+        pacientesData[camaActiva].alergiaIntensa = document.getElementById("alergia-intensa").value;
+        pacientesData[camaActiva].anticoagFarma = document.getElementById("anticoag-farma").value;
+        pacientesData[camaActiva].anticoagUltima = document.getElementById("anticoag-ultima").value;
+        
+        pacientesData[camaActiva].labHb = document.getElementById("lab-col-hb").value;
+        pacientesData[camaActiva].labLeuco = document.getElementById("lab-col-leuco").value;
+        pacientesData[camaActiva].labCayados = document.getElementById("lab-col-cayados").value;
+        pacientesData[camaActiva].labPlaquetas = document.getElementById("lab-col-plaquetas").value;
+        pacientesData[camaActiva].labCreat = document.getElementById("lab-col-creat").value;
+        pacientesData[camaActiva].labLactato = document.getElementById("lab-col-lactato").value;
+        
         pacientesData[camaActiva].indicaciones = document.getElementById("txt-indicaciones").value;
-        pacientesData[camaActiva].pendientes = document.getElementById("txt-pendientes").value;
-        pacientesData[camaActiva].criterioAlta = document.getElementById("chk-criterio-alta").checked;
+        pacientesData[camaActiva].aptoAlta = document.getElementById("chk-alta").checked;
         pacientesData[camaActiva].indAlta = document.getElementById("txt-indicaciones-alta").value;
 
+        pacientesData[camaActiva].hta = document.getElementById("chk-hta").checked;
+        pacientesData[camaActiva].dm2 = document.getElementById("chk-dm2").checked;
+        pacientesData[camaActiva].irc = document.getElementById("chk-irc").checked;
+        pacientesData[camaActiva].rCardioChk = document.getElementById("r-cardio-chk").checked;
+        pacientesData[camaActiva].rAnesChk = document.getElementById("r-anes-chk").checked;
+        paciente = pacientesData[camaActiva];
+        pacientesData[camaActiva].rNefroChk = document.getElementById("r-nefro-chk").checked;
+
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Ficha clínica maestra guardada exitosamente!");
+        alert("¡Historia clínica y quirúrgica guardada exitosamente!");
+        renderCenso();
     });
 
     function generarPaseWhatsApp() {
         let total = 0;
+        let aptosAlta = 0;
         let detalle = "";
         Object.keys(pacientesData).forEach(cama => {
             if (pacientesData[cama].nombre) {
                 total++;
-                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} (HC: ${pacientesData[cama].hc}) | Conducta: ${pacientesData[cama].conducta || 'En evolución'}`;
+                if (pacientesData[cama].aptoAlta) aptosAlta++;
+                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} (HC: ${pacientesData[cama].hc}) | Dx: ${pacientesData[cama].diagnostico} | Plan: ${pacientesData[cama].planInicial || 'En observación'}`;
             }
         });
 
-        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes.\n${detalle}\n\n⚠️ Verificado en SurgiFlow.`;
+        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes (${aptosAlta} listos para alta).\n${detalle}\n\n⚠️ Revisar indicaciones y pendientes en SurgiFlow Pro.`;
     }
 
     renderCenso();
