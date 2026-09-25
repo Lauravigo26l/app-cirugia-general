@@ -1,30 +1,99 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
-    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
     margin: 0;
     padding: 20px;
 }
 header {
     background-color: #1e3a8a;
     color: white;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 10px;
     text-align: center;
     margin-bottom: 20px;
 }
+.dashboard-stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.stat-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-top: 4px solid #3b82f6;
+}
+.stat-box h3 { margin: 0; font-size: 14px; color: #64748b; }
+.stat-box p { margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #1e3a8a; }
+
+.actions-bar { margin-bottom: 20px; }
+.btn-primary {
+    background-color: #059669;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-primary:hover { background-color: #047857; }
+
+h2 { color: #1e3a8a; font-size: 20px; margin-top: 30px; }
+
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 15px;
 }
 .cama-card {
     background: white;
     padding: 15px;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-left: 6px solid #10b981; /* Verde por defecto (Estable) */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-left: 6px solid #10b981; /* Verde por defecto */
+    cursor: pointer;
+    transition: transform 0.2s;
 }
+.cama-card:hover { transform: translateY(-3px); }
 .cama-card.amarillo { border-left-color: #f59e0b; }
 .cama-card.rojo { border-left-color: #ef4444; }
-h3 { margin-top: 0; font-size: 18px; color: #1e3a8a; }
+
+.cama-card h3 { margin-top: 0; font-size: 16px; color: #1e3a8a; display: flex; justify-content: space-between; }
+.cama-card p { margin: 5px 0; font-size: 13px; color: #475569; }
+
+/* Estilos de Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 25px;
+    border-radius: 10px;
+    width: 90%; max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+.close:hover { color: black; }
+form label { display: block; margin-top: 10px; font-weight: bold; font-size: 13px; }
+form input, form textarea, form select {
+    width: 100%; padding: 8px; margin-top: 5px;
+    border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;
+}
+.checkbox-group { display: flex; gap: 15px; margin-top: 5px; font-size: 13px; }
+.btn-save {
+    background-color: #1e3a8a; color: white; border: none;
+    padding: 10px; width: 100%; border-radius: 6px;
+    margin-top: 20px; font-size: 15px; cursor: pointer;
+}
+.btn-save:hover { background-color: #1e293b; }
