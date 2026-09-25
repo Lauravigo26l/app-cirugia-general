@@ -24,23 +24,81 @@
         </div>
     </header>
 
-    <!-- Barra de Navegación Principal -->
+    <!-- Barra de Navegación Principal por Secciones -->
     <nav class="nav-bar">
-        <button class="nav-btn active">📊 Torre de Control & KPIs</button>
-        <button class="nav-btn">🏥 Hospitalización</button>
-        <button class="nav-btn">🚨 Emergencia</button>
+        <button class="nav-btn active" data-tab="torre">📊 Torre de Control & KPIs</button>
+        <button class="nav-btn" data-tab="hospitalizacion">🏥 Hospitalización</button>
+        <button class="nav-btn" data-tab="emergencia">🚨 Emergencia</button>
     </nav>
 
-    <!-- Sección de Camas y Controles -->
-    <main>
+    <!-- CONTENIDO DE LA VISTA: TORRE DE CONTROL -->
+    <main id="seccion-torre" class="vista-seccion">
         <div class="section-header">
             <h3 style="margin:0; color: #be185d;">CAMAS HOSPITALIZACIÓN (218-A a 224-B)</h3>
             <button id="btn-ingreso" class="btn-pink">+ Ingresar Paciente</button>
         </div>
-
-        <!-- Grilla de Camas Oficiales -->
         <div id="grid-camas" class="grid-container">
             <!-- Generado por JavaScript -->
+        </div>
+    </main>
+
+    <!-- CONTENIDO DE LA VISTA: HOSPITALIZACIÓN / DETALLE DE PACIENTE & CÁMARA IA -->
+    <main id="seccion-hospitalizacion" class="vista-seccion" style="display: none;">
+        <div class="paciente-detalle-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: #be185d; margin:0;">📋 Ficha Clínica y Registro por Sección</h3>
+                <button class="btn-pink" id="btn-camara-hosp">📷 Escanear Documento con IA</button>
+            </div>
+            
+            <div class="subtabs">
+                <button class="subtab-btn active">1. Antecedentes & Examen</button>
+                <button class="subtab-btn">2. Quirófano & Técnica</button>
+                <button class="subtab-btn">3. Evolución de Laboratorio</button>
+                <button class="subtab-btn">4. Tratamiento & Decisión</button>
+                <button class="subtab-btn">5. Escalas Quirúrgicas</button>
+            </div>
+
+            <div class="clinical-box">
+                <h4>
+                    Comorbilidades Crónicas y Antecedentes Quirúrgicos
+                    <div>
+                        <button class="btn-secondary" onclick="alert('Modo edición de sección activado')">✏️ Editar Sección</button>
+                    </div>
+                </h4>
+                <div class="checkbox-group" style="margin-top: 10px;">
+                    <label><input type="checkbox"> HTA</label>
+                    <label><input type="checkbox"> Diabetes (DM2)</label>
+                    <label><input type="checkbox"> Falla Renal (IRC)</label>
+                    <label><input type="checkbox" checked> Antecedentes Quirúrgicos Previos</label>
+                </div>
+                <p style="font-size: 13px; color: #64748b; margin-top: 10px;">
+                    <em>Tratamiento habitual registrado:</em> Losartán 50mg c/24h, Metformina 850mg c/12h.
+                </p>
+            </div>
+
+            <div class="clinical-box">
+                <h4>
+                    Cámara de Traducción y Registro IA (Hospitalización / Emergencia)
+                </h4>
+                <p style="font-size: 13px; color: #64748b;">
+                    Sube una foto de la nota de transferencia, historia externa o analítica física para que la IA la traduzca y registre automáticamente.
+                </p>
+                <input type="file" accept="image/*" capture="environment" style="margin-top: 5px;">
+            </div>
+        </div>
+    </main>
+
+    <!-- CONTENIDO DE LA VISTA: EMERGENCIA / TÓPICO -->
+    <main id="seccion-emergencia" class="vista-seccion" style="display: none;">
+        <div class="paciente-detalle-container">
+            <h3 style="color: #be185d; margin-top:0;">🚨 Tópico de Cirugía & Urgencias</h3>
+            <p style="font-size: 14px; color: #64748b;">
+                Registro de pacientes en emergencia (ej. Silla 3 de Tópico de Cirugía) con pase pendiente a camas de piso (ej. Cama 223-B).
+            </p>
+            <div class="clinical-box">
+                <h4>Ingresos recientes desde Emergencia</h4>
+                <p style="font-size: 13px;">No hay pacientes en espera de cama en este momento. Haz clic en la Torre de Control para asignar camas de hospitalización.</p>
+            </div>
         </div>
     </main>
 
