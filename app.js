@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let pacientesData = JSON.parse(localStorage.getItem("pacientesData")) || {};
     let camaActiva = null;
 
-    // Navegación de pestañas principales
     navButtons.forEach(btn => {
         btn.addEventListener("click", () => {
             navButtons.forEach(b => b.classList.remove("active"));
@@ -89,30 +88,43 @@ document.addEventListener("DOMContentLoaded", () => {
         if (paciente) {
             tituloFichaPaciente.textContent = `📋 Cama ${numCama}: ${paciente.nombre} (HC: ${paciente.hc})`;
             document.getElementById("txt-tratamiento-habitual").value = paciente.tratamientoHabitual || "";
+            document.getElementById("txt-alergias").value = paciente.alergias || "";
+            document.getElementById("txt-anticoag").value = paciente.anticoag || "";
+            
             document.getElementById("q-abordaje").value = paciente.abordaje || "Laparoscópica";
+            document.getElementById("q-herida").value = paciente.herida || "Limpia";
             document.getElementById("q-tecnica").value = paciente.tecnica || "";
             document.getElementById("q-cirujano").value = paciente.cirujano || "";
             document.getElementById("q-drenaje").value = paciente.drenaje || "";
+            
             document.getElementById("lab-hb").value = paciente.hb || "";
             document.getElementById("lab-leuco").value = paciente.leuco || "";
             document.getElementById("lab-cayados").value = paciente.cayados || "";
             document.getElementById("lab-creat").value = paciente.creat || "";
             document.getElementById("lab-lactato").value = paciente.lactato || "";
             document.getElementById("lab-inr").value = paciente.inr || "";
+            document.getElementById("score-alvarado").value = paciente.alvarado || "";
+            document.getElementById("score-tokio").value = paciente.tokio || "";
+            
             document.getElementById("txt-indicaciones").value = paciente.indicaciones || "";
+            document.getElementById("txt-plan").value = paciente.plan || "";
             
             document.getElementById("chk-hta").checked = paciente.hta || false;
             document.getElementById("chk-dm2").checked = paciente.dm2 || false;
             document.getElementById("chk-irc").checked = paciente.irc || false;
-            document.getElementById("riesgo-cardio").checked = paciente. rCardio || false;
+            document.getElementById("chk-epoc").checked = paciente.epoc || false;
+            document.getElementById("chk-cardiopatia").checked = paciente.cardiopatia || false;
+            document.getElementById("chk-cirugia").checked = paciente.cirugiaPrev || false;
+
+            document.getElementById("riesgo-cardio").checked = paciente.rCardio || false;
             document.getElementById("riesgo-anestesia").checked = paciente.rAnestesia || false;
             document.getElementById("riesgo-neumo").checked = paciente.rNeumo || false;
             document.getElementById("riesgo-nefro").checked = paciente.rNefro || false;
         } else {
             tituloFichaPaciente.textContent = `📋 Cama ${numCama} - Sin paciente asignado.`;
-            document.getElementById("txt-tratamiento-habitual").value = "";
-            document.getElementById("q-tecnica").value = "";
-            document.getElementById("txt-indicaciones").value = "";
+            // Limpiar campos
+            document.querySelectorAll(".paciente-detalle-container input[type='text'], .paciente-detalle-container textarea").forEach(el => el.value = "");
+            document.querySelectorAll(".paciente-detalle-container input[type='checkbox']").forEach(el => el.checked = false);
         }
     }
 
@@ -144,28 +156,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         pacientesData[camaActiva].tratamientoHabitual = document.getElementById("txt-tratamiento-habitual").value;
+        pacientesData[camaActiva].alergias = document.getElementById("txt-alergias").value;
+        pacientesData[camaActiva].anticoag = document.getElementById("txt-anticoag").value;
+        
         pacientesData[camaActiva].abordaje = document.getElementById("q-abordaje").value;
+        pacientesData[camaActiva].herida = document.getElementById("q-herida").value;
         pacientesData[camaActiva].tecnica = document.getElementById("q-tecnica").value;
         pacientesData[camaActiva].cirujano = document.getElementById("q-cirujano").value;
         pacientesData[camaActiva].drenaje = document.getElementById("q-drenaje").value;
+        
         pacientesData[camaActiva].hb = document.getElementById("lab-hb").value;
         pacientesData[camaActiva].leuco = document.getElementById("lab-leuco").value;
         pacientesData[camaActiva].cayados = document.getElementById("lab-cayados").value;
         pacientesData[camaActiva].creat = document.getElementById("lab-creat").value;
         pacientesData[camaActiva].lactato = document.getElementById("lab-lactato").value;
         pacientesData[camaActiva].inr = document.getElementById("lab-inr").value;
+        pacientesData[camaActiva].alvarado = document.getElementById("score-alvarado").value;
+        pacientesData[camaActiva].tokio = document.getElementById("score-tokio").value;
+        
         pacientesData[camaActiva].indicaciones = document.getElementById("txt-indicaciones").value;
+        pacientesData[camaActiva].plan = document.getElementById("txt-plan").value;
 
         pacientesData[camaActiva].hta = document.getElementById("chk-hta").checked;
         pacientesData[camaActiva].dm2 = document.getElementById("chk-dm2").checked;
         pacientesData[camaActiva].irc = document.getElementById("chk-irc").checked;
+        pacientesData[camaActiva].epoc = document.getElementById("chk-epoc").checked;
+        pacientesData[camaActiva].cardiopatia = document.getElementById("chk-cardiopatia").checked;
+        pacientesData[camaActiva].cirugiaPrev = document.getElementById("chk-cirugia").checked;
+
         pacientesData[camaActiva].rCardio = document.getElementById("riesgo-cardio").checked;
         pacientesData[camaActiva].rAnestesia = document.getElementById("riesgo-anestesia").checked;
         pacientesData[camaActiva].rNeumo = document.getElementById("riesgo-neumo").checked;
         pacientesData[camaActiva].rNefro = document.getElementById("riesgo-nefro").checked;
 
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Ficha clínica y quirúrgica guardada con éxito!");
+        alert("¡Ficha clínica completa guardada exitosamente!");
     });
 
     function generarPaseWhatsApp() {
@@ -174,11 +199,11 @@ document.addEventListener("DOMContentLoaded", () => {
         Object.keys(pacientesData).forEach(cama => {
             if (pacientesData[cama].nombre) {
                 total++;
-                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} | Dx: ${pacientesData[cama].diagnostico}`;
+                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} (HC: ${pacientesData[cama].hc}) | Dx: ${pacientesData[cama].diagnostico}`;
             }
         });
 
-        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes en servicio.\n${detalle}\n\n⚠️ Revisar pendientes clínicos en el sistema.`;
+        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes.\n${detalle}\n\n⚠️ Revisar indicaciones y pendientes en SurgiFlow.`;
     }
 
     renderCenso();
@@ -194,5 +219,5 @@ function cambiarSubTab(num) {
 function copiarPaseWhatsApp() {
     const texto = document.getElementById("texto-pase-whatsapp").textContent;
     navigator.clipboard.writeText(texto);
-    alert("¡Pase de guardia copiado al portapapeles! Listo para pegar en WhatsApp.");
+    alert("¡Pase de guardia copiado al portapapeles!");
 }
