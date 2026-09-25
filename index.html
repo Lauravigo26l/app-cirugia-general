@@ -3,98 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torre de Control - Cirugía General Tarapoto</title>
+    <title>SurgiFlow - Cirugía General Tarapoto</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Encabezado Superior Profesional -->
     <header>
-        <h1>🏥 Hospital II-2 Tarapoto</h1>
-        <p>Servicio de Cirugía General - Torre de Control & Guardia</p>
+        <div class="logo-area">
+            <h1>
+                <span>🏥</span> SurgiFlow 
+                <span class="badge-ro">CIRUGÍA GENERAL</span>
+            </h1>
+            <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">
+                🏥 HOSPITAL TARAPOTO II-2 MINSA &bull; <strong>Dra. Vigo Gamboa Laura Tatiana</strong>
+            </p>
+        </div>
+        <div class="user-info">
+            <span>R2 Cirugía General</span>
+        </div>
     </header>
 
+    <!-- Barra de Navegación Principal -->
+    <nav class="nav-bar">
+        <button class="nav-btn active">📊 Torre de Control & KPIs</button>
+        <button class="nav-btn">🏥 Hospitalización</button>
+        <button class="nav-btn">🚨 Emergencia</button>
+    </nav>
+
+    <!-- Sección de Camas y Controles -->
     <main>
-        <!-- Panel de Resumen de Guardia -->
-        <section class="dashboard-stats">
-            <div class="stat-box">
-                <h3>Censo Total</h3>
-                <p id="total-pacientes">0</p>
-            </div>
-            <div class="stat-box">
-                <h3>Camas Prestadas</h3>
-                <p id="total-prestadas">0</p>
-            </div>
-            <div class="stat-box">
-                <h3>Retenidos URPA</h3>
-                <p id="total-urpa">0</p>
-            </div>
-        </section>
-
-        <!-- Botón para Nuevo Ingreso -->
-        <div class="actions-bar">
-            <button id="btn-ingreso" class="btn-primary">+ Registrar Nuevo Paciente / Ingreso</button>
+        <div class="section-header">
+            <h3 style="margin:0; color: #be185d;">CAMAS HOSPITALIZACIÓN (218-A a 224-B)</h3>
+            <button id="btn-ingreso" class="btn-pink">+ Ingresar Paciente</button>
         </div>
 
-        <!-- Grilla de Camas Oficiales (218-A a 224-B) -->
-        <section id="dashboard">
-            <h2>Camas del Servicio (218-A a 224-B)</h2>
-            <div id="grid-camas" class="grid-container">
-                <!-- Se generan dinámicamente -->
-            </div>
-        </section>
-
-        <!-- Sección de Camas Prestadas y URPA -->
-        <section id="extras-section">
-            <h2>Camas Extramurales / Prestadas y URPA</h2>
-            <div id="grid-extras" class="grid-container">
-                <!-- Se generan dinámicamente -->
-            </div>
-        </section>
+        <!-- Grilla de Camas Oficiales -->
+        <div id="grid-camas" class="grid-container">
+            <!-- Generado por JavaScript -->
+        </div>
     </main>
-
-    <!-- Modal de Ingreso / Edición de Paciente -->
-    <div id="modal-paciente" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Gestión de Cama / Paciente</h2>
-            <form id="form-paciente">
-                <label>Número de Cama / Ubicación:</label>
-                <input type="text" id="input-cama" readonly>
-
-                <label>Apellidos y Nombres:</label>
-                <input type="text" id="input-nombre" placeholder="Ej. Pérez Gómez, Juan" required>
-
-                <label>Historia Clínica (HC):</label>
-                <input type="text" id="input-hc" placeholder="Número de HC" required>
-
-                <label>Diagnóstico Postoperatorio / Principal:</label>
-                <textarea id="input-diagnostico" placeholder="Ej. Post-operado de Apendicectomía Laparoscópica Día 1"></textarea>
-
-                <label>Comorbilidades / Antecedentes:</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" value="HTA"> HTA</label>
-                    <label><input type="checkbox" value="DM2"> DM2</label>
-                    <label><input type="checkbox" value="IRC"> IRC</label>
-                    <label><input type="checkbox" value="Ant. Quirúrgicos"> Cirugías Previas</label>
-                </div>
-
-                <label>Semáforo de Riesgo Clínico:</label>
-                <select id="input-riesgo">
-                    <option value="verde">Verde - Estable</option>
-                    <option value="amarillo">Amarillo - Observación / FIEBRE o Débito</option>
-                    <option value="rojo">Rojo - Crítico / Inestable</option>
-                </select>
-
-                <label>Tipo de Ubicación:</label>
-                <select id="input-tipo">
-                    <option value="propia">Cama Propia de Cirugía</option>
-                    <option value="prestada">Cama Prestada (Servicio Vecino)</option>
-                    <option value="urpa">Retenido en URPA</option>
-                </select>
-
-                <button type="submit" class="btn-save">Guardar Datos de Paciente</button>
-            </form>
-        </div>
-    </div>
 
     <script src="app.js"></script>
 </body>
