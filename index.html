@@ -26,96 +26,146 @@
 
     <!-- Barra de Navegación Principal por Secciones -->
     <nav class="nav-bar">
-        <button class="nav-btn active" data-tab="torre">📊 Torre de Control</button>
-        <button class="nav-btn" data-tab="hospitalizacion">🏥 Hospitalización & Ficha</button>
-        <button class="nav-btn" data-tab="resumen">📑 Resumen de Guardia</button>
+        <button class="nav-btn active" data-tab="torre">📊 Torre de Control & Camas</button>
+        <button class="nav-btn" data-tab="hospitalizacion">🏥 Ficha Clínica Integral</button>
+        <button class="nav-btn" data-tab="escalas">🧮 Calculadoras & Scores</button>
+        <button class="nav-btn" data-tab="resumen">📑 Pase de Guardia & KPIs</button>
     </nav>
 
-    <!-- CONTENIDO DE LA VISTA: TORRE DE CONTROL -->
+    <!-- VISTA: TORRE DE CONTROL (Camas 218-A a 224-B y Prestadas/URPA) -->
     <main id="seccion-torre" class="vista-seccion">
         <div class="section-header">
-            <h3 style="margin:0; color: #be185d;">🛏️ CAMAS HOSPITALIZACIÓN (218-A a 224-B)</h3>
-            <button id="btn-ingreso-general" class="btn-pink">+ Registrar Paciente / Cama Prestada</button>
+            <h3 style="margin:0; color: #be185d;">🛏️ CENSO OFICIAL: CAMAS 218-A a 224-B Y EXTRAMURALES</h3>
+            <button id="btn-ingreso-general" class="btn-pink">+ Registrar Ingreso / Cama Prestada</button>
         </div>
         <div id="grid-camas" class="grid-container">
-            <!-- Generado por JavaScript -->
+            <!-- Generado por JS -->
         </div>
     </main>
 
-    <!-- CONTENIDO DE LA VISTA: HOSPITALIZACIÓN / FICHA CLÍNICA DETALLADA -->
+    <!-- VISTA: FICHA CLÍNICA INTEGRAL (Hospitalización & Emergencia) -->
     <main id="seccion-hospitalizacion" class="vista-seccion" style="display: none;">
         <div class="paciente-detalle-container">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h3 style="color: #be185d; margin:0;" id="titulo-ficha-paciente">📋 Ficha del Paciente: Seleccione una Cama</h3>
-                <button class="btn-pink" onclick="alert('📷 IA OCR: Analizando documento fotográfico y extrayendo parámetros clínicos...')">📷 Escanear con IA</button>
+                <button class="btn-pink" onclick="alert('📷 IA OCR: Analizando documento fotográfico y extrayendo anamnesis y laboratorios...')">📷 Escanear Documento / Nota con IA</button>
             </div>
             
             <div class="subtabs">
-                <button class="subtab-btn active" onclick="cambiarSubTab(1)">🩺 1. Antecedentes & Riesgos</button>
-                <button class="subtab-btn" onclick="cambiarSubTab(2)">🔪 2. Quirófano & Técnica</button>
-                <button class="subtab-btn" onclick="cambiarSubTab(3)">🧪 3. Laboratorio & Scores</button>
-                <button class="subtab-btn" onclick="cambiarSubTab(4)">💊 4. Tratamiento & Plan</button>
+                <button class="subtab-btn active" onclick="cambiarSubTab(1)">🩺 1. Anamnesis & Comorbilidades</button>
+                <button class="subtab-btn" onclick="cambiarSubTab(2)">🔪 2. Quirófano & Reporte Operatorio</button>
+                <button class="subtab-btn" onclick="cambiarSubTab(3)">🧪 3. Laboratorio & Curvas</button>
+                <button class="subtab-btn" onclick="cambiarSubTab(4)">💊 4. Prescripción Diaria & Plan</button>
             </div>
 
-            <!-- SUBTAB 1: ANTECEDENTES Y RIESGOS ESPECIALIZADOS -->
+            <!-- SUBTAB 1: ANAMNESIS, INGRESO, COMORBILIDADES Y RIESGOS -->
             <div id="subtab-content-1" class="subtab-content">
                 <div class="clinical-box">
-                    <h4>🗂️ Comorbilidades Crónicas por Sistemas</h4>
-                    <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
-                        <label><input type="checkbox" id="chk-hta"> 🫀 HTA (Hipertensión)</label>
-                        <label><input type="checkbox" id="chk-dm2"> 🩸 Diabetes Mellitus 2</label>
-                        <label><input type="checkbox" id="chk-irc"> ⚠️ Falla Renal (IRC)</label>
-                        <label><input type="checkbox" id="chk-epoc"> 🌬️ EPOC / Asma</label>
-                        <label><input type="checkbox" id="chk-cardiopatia"> 💓 Cardiopatía Isquémica</label>
-                        <label><input type="checkbox" id="chk-cirugia"> ✂️ Cirugías Previas</label>
+                    <h4>
+                        <span>🩺 Anamnesis & Motivo de Ingreso</span>
+                        <button class="btn-secondary" onclick="alert('Modo edición activado para Anamnesis')">✏️ Editar</button>
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+                        <div><label style="font-size:12px; font-weight:bold;">Procedencia:</label><input type="text" id="an-procedencia" placeholder="Ej. Emergencia / Referido"></div>
+                        <div><label style="font-size:12px; font-weight:bold;">Tiempo de Enfermedad:</label><input type="text" id="an-t-enfermedad" placeholder="Ej. 18 horas"></div>
+                        <div><label style="font-size:12px; font-weight:bold;">Forma de Inicio:</label><input type="text" id="an-inicio" placeholder="Ej. Insidioso / Brusco"></div>
                     </div>
-                    <label style="margin-top:15px; display:block; font-size:13px; font-weight:bold;">💊 Tratamiento Habitual por Comorbilidades:</label>
-                    <input type="text" id="txt-tratamiento-habitual" placeholder="Ej. Losartán 50mg c/24h, Metformina 850mg c/12h" style="width:100%; padding:8px; margin-top:5px; border:1px solid #fbcfe8; border-radius:6px;">
-                </div>
-
-                <div class="clinical-box">
-                    <h4>⚠️ Evaluaciones y Riesgos Perioperatorios Requeridos</h4>
-                    <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
-                        <label><input type="checkbox" id="riesgo-cardio"> 🫀 Riesgo Cardiológico / Med. Interna</label>
-                        <label><input type="checkbox" id="riesgo-anestesia"> ⚡ Riesgo Pre-Anestésico (ASA)</label>
-                        <label><input type="checkbox" id="riesgo-neumo"> 🫁 Riesgo Neumológico</label>
-                        <label><input type="checkbox" id="riesgo-nefro"> 🩺 Riesgo Nefrológico</label>
+                    <label style="margin-top:10px; display:block; font-size:12px; font-weight:bold;">Motivo de Ingreso / Relato Cronológico:</label>
+                    <textarea id="an-relato" rows="2" placeholder="Dolor abdominal tipo cólico que luego se focaliza en fosa iliaca derecha..." style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></textarea>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;">
+                        <div><label style="font-size:11px; font-weight:bold;">PA (mmHg):</label><input type="text" id="fv-pa" placeholder="120/80"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">FC (lpm):</label><input type="text" id="fv-fc" placeholder="88"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">FR (rpm):</label><input type="text" id="fv-fr" placeholder="20"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">T° (°C):</label><input type="text" id="fv-temp" placeholder="37.5"></div>
                     </div>
                 </div>
 
                 <div class="clinical-box">
-                    <h4>🚨 Alergias Críticas y Fármacos de Alto Riesgo (Washout)</h4>
-                    <div style="display: flex; gap: 15px;">
+                    <h4><span>🗂️ Comorbilidades Crónicas & Tratamiento Habitual</span></h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; font-size: 13px;">
+                        <div><label><input type="checkbox" id="c-hta"> HTA</label><input type="text" id="t-hta" placeholder="Tratamiento / Dosis" style="width:100%; margin-top:3px; padding:4px;"></div>
+                        <div><label><input type="checkbox" id="c-dm2"> DM2</label><input type="text" id="t-dm2" placeholder="Tratamiento / Dosis" style="width:100%; margin-top:3px; padding:4px;"></div>
+                        <div><label><input type="checkbox" id="c-irc"> IRC</label><input type="text" id="t-irc" placeholder="Tratamiento / Dosis" style="width:100%; margin-top:3px; padding:4px;"></div>
+                        <div><label><input type="checkbox" id="c-epoc"> EPOC / Asma</label><input type="text" id="t-epoc" placeholder="Tratamiento / Dosis" style="width:100%; margin-top:3px; padding:4px;"></div>
+                        <div><label><input type="checkbox" id="c-cardio"> Cardiopatía</label><input type="text" id="t-cardio" placeholder="Tratamiento / Dosis" style="width:100%; margin-top:3px; padding:4px;"></div>
+                        <div><label><input type="checkbox" id="c-hepatopatia"> Hepatopatía</label><input type="text" id="t-hepatopatia" placeholder="Tratamiento / Dosis" style="width:100%; margin-top:3px; padding:4px;"></div>
+                    </div>
+                </div>
+
+                <div class="clinical-box">
+                    <h4><span>✂️ Antecedentes Quirúrgicos Previos</span></h4>
+                    <textarea id="ant-quirurgicos" rows="2" placeholder="Ej. Apendicectomía abierta (2018) en Hospital Regional. Hernioplastia inguinal derecha (2021). Sin complicaciones." style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></textarea>
+                </div>
+
+                <div class="clinical-box" style="border: 2px solid #ef4444; background: #fff5f5;">
+                    <h4 style="color: #b91c1c;"><span>🚨 Alertas de Alergias (RAMS) & Anticoagulantes (Washout)</span></h4>
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
                         <div style="flex:1;">
-                            <label style="font-size:12px; font-weight:bold;">Alergias (RAMS):</label>
-                            <input type="text" id="txt-alergias" placeholder="Ej. Niega RAMS / Alérgico a AINEs" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
+                            <label style="font-size:12px; font-weight:bold; color:#b91c1c;">Alergias / RAMS Severas:</label>
+                            <input type="text" id="alerta-alergias" placeholder="Ej. PENICILINA (Genera shock anafiláctico / Edema labial)" style="width:100%; padding:6px; border:1px solid #ef4444; border-radius:4px; background:#fff; font-weight:bold;">
                         </div>
                         <div style="flex:1;">
-                            <label style="font-size:12px; font-weight:bold;">Anticoagulantes / Antiagregantes:</label>
-                            <input type="text" id="txt-anticoag" placeholder="Ej. Aspirina susp. hace 5 días" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
+                            <label style="font-size:12px; font-weight:bold; color:#b91c1c;">Anticoagulantes / Antiagregantes (Última toma & Lavado):</label>
+                            <input type="text" id="alerta-anticoag" placeholder="Ej. Warfarina (Última toma: Hace 4 días. Ventana de lavado cumplida)" style="width:100%; padding:6px; border:1px solid #ef4444; border-radius:4px; background:#fff;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clinical-box">
+                    <h4><span>⚠️ Evaluaciones y Riesgos Perioperatorios Especializados</span></h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+                        <div>
+                            <label><input type="checkbox" id="r-cardio"> <strong>Riesgo Cardiológico / Med. Interna:</strong></label>
+                            <input type="text" id="obs-cardio" placeholder="Sugerencias / Visto bueno del especialista" style="width:100%; margin-top:3px; padding:5px;">
+                        </div>
+                        <div>
+                            <label><input type="checkbox" id="r-anestesia"> <strong>Riesgo Pre-Anestésico (ASA):</strong></label>
+                            <input type="text" id="obs-anestesia" placeholder="Clasificación ASA y sugerencias" style="width:100%; margin-top:3px; padding:5px;">
+                        </div>
+                        <div>
+                            <label><input type="checkbox" id="r-neumo"> <strong>Riesgo Neumológico:</strong></label>
+                            <input type="text" id="obs-neumo" placeholder="Evaluación respiratoria / Espirometría" style="width:100%; margin-top:3px; padding:5px;">
+                        </div>
+                        <div>
+                            <label><input type="checkbox" id="r-nefro"> <strong>Riesgo Nefrológico:</strong></label>
+                            <input type="text" id="obs-nefro" placeholder="Manejo de tasa de filtración / diálisis" style="width:100%; margin-top:3px; padding:5px;">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SUBTAB 2: QUIRÓFANO Y TÉCNICA -->
+            <!-- SUBTAB 2: QUIRÓFANO Y REPORTE OPERATORIO -->
             <div id="subtab-content-2" class="subtab-content" style="display: none;">
                 <div class="clinical-box">
-                    <h4>🔪 Bitácora Quirúrgica & Reporte Operatorio Estructurado</h4>
+                    <h4><span>🔪 Bitácora Quirúrgica & Reporte Operatorio Oficial</span></h4>
                     
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;">
                         <div>
-                            <label style="font-size:13px; font-weight:bold;">Tipo de Abordaje Quirúrgico:</label>
-                            <select id="q-abordaje" style="width:100%; padding:8px; margin-top:5px; border:1px solid #fbcfe8; border-radius:6px;">
-                                <option value="Laparoscópica">Laparoscópica</option>
-                                <option value="Abierta / LPE">Abierta / LPE (Laparotomía Exploratoria)</option>
-                                <option value="Percutánea">Percutánea</option>
-                                <option value="Conversión">Conversión (Laparo a Abierta)</option>
+                            <label style="font-size:12px; font-weight:bold;">Procedimiento Quirúrgico:</label>
+                            <select id="q-procedimiento" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
+                                <option value="Apendicectomía Laparoscópica">Apendicectomía Laparoscópica</option>
+                                <option value="Apendicectomía Abierta">Apendicectomía Abierta</option>
+                                <option value="Colecistectomía Laparoscópica">Colecistectomía Laparoscópica</option>
+                                <option value="Colecistectomía Abierta">Colecistectomía Abierta</option>
+                                <option value="Laparotomía Exploratoria">Laparotomía Exploratoria (LPE)</option>
+                                <option value="Hernioplastia Inguinal (TAPP/Lichtenstein)">Hernioplastia Inguinal</option>
+                                <option value="Hernioplastia Umbilical / Incisional">Hernioplastia Umbilical / Incisional</option>
+                                <option value="Drenaje de Absceso / Otro">Drenaje de Absceso / Otro</option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:13px; font-weight:bold;">Estado de Herida Operatoria:</label>
-                            <select id="q-herida" style="width:100%; padding:8px; margin-top:5px; border:1px solid #fbcfe8; border-radius:6px;">
+                            <label style="font-size:12px; font-weight:bold;">Abordaje:</label>
+                            <select id="q-abordaje" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
+                                <option value="Laparoscópica">Laparoscópica</option>
+                                <option value="Abierta">Abierta</option>
+                                <option value="Percutánea">Percutánea</option>
+                                <option value="Conversión a Abierta">Conversión a Abierta</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">Estado de Herida:</label>
+                            <select id="q-herida" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
                                 <option value="Limpia">Limpia (Clase I)</option>
                                 <option value="Limpia-Contaminada">Limpia-Contaminada (Clase II)</option>
                                 <option value="Contaminada">Contaminada (Clase III)</option>
@@ -124,72 +174,146 @@
                         </div>
                     </div>
 
-                    <label style="margin-top:10px; display:block; font-size:13px; font-weight:bold;">📝 Descripción de Técnica Quirúrgica (IA Asistida paso a paso):</label>
-                    <textarea id="q-tecnica" rows="4" placeholder="Ej. Paciente en decúbito dorsal bajo anestesia general. Asepsia y antisepsia. Incisión umbilical, neumoperitoneo con aguja de Veress a 14 mmHg..." style="width:100%; padding:8px; margin-top:5px; border:1px solid #fbcfe8; border-radius:6px;"></textarea>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px;">
+                        <div><label style="font-size:11px; font-weight:bold;">Inicio CX:</label><input type="time" id="q-h-inicio" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Fin CX:</label><input type="time" id="q-h-fin" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Tipo Anestesia:</label><input type="text" id="q-anestesia" placeholder="General / Raquídea" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">ASA:</label><input type="text" id="q-asa" placeholder="II E" style="width:100%; padding:4px;"></div>
+                    </div>
 
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <div style="flex:1;">
-                            <label style="font-size:12px; font-weight:bold;">👨‍⚕️ Cirujano Principal / Residente:</label>
-                            <input type="text" id="q-cirujano" placeholder="Dr. / Dra." style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px;">
+                        <div><label style="font-size:11px; font-weight:bold;">Cirujano Principal:</label><input type="text" id="q-cirujano" placeholder="Dr. / Dra." style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Primer Asistente:</label><input type="text" id="q-asistente" placeholder="Residente / Médico" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Anestesiólogo:</label><input type="text" id="q-anestesio" placeholder="Dr. / Dra." style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Enfermera Instr.:</label><input type="text" id="q-enfermera" placeholder="Lic." style="width:100%; padding:4px;"></div>
+                    </div>
+
+                    <label style="margin-top:10px; display:block; font-size:12px; font-weight:bold;">Hallazgos Operatorios:</label>
+                    <textarea id="q-hallazgos" rows="2" placeholder="Ej. Apéndice cecal retrocecal de 8x1 cm, congestiva, con fibrina en tercio distal, sin perforación..." style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></textarea>
+
+                    <label style="margin-top:10px; display:block; font-size:12px; font-weight:bold;">📝 Técnica Quirúrgica (Redacción IA Automática Paso a Paso):</label>
+                    <textarea id="q-tecnica" rows="4" placeholder="Paciente en decúbito dorsal... Se realiza incisión... Exploración de cavidad..." style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></textarea>
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">Drenaje Colocado:</label>
+                            <input type="text" id="q-drenaje-tipo" placeholder="Ej. Dren tubular laminar / Penrose en lecho vesicular" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
                         </div>
-                        <div style="flex:1;">
-                            <label style="font-size:12px; font-weight:bold;">🧪 Drenajes Colocados en Cavidad:</label>
-                            <input type="text" id="q-drenaje" placeholder="Ej. Dren tubular / Penrose / Jackson-Pratt" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">Evolución de Débito (24 hrs):</label>
+                            <input type="text" id="q-debito-24h" placeholder="Ej. 40 cc de características serosanguinolentas" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SUBTAB 3: LABORATORIO Y SCORES -->
+            <!-- SUBTAB 3: LABORATORIO, CURVAS Y FOTO OCR -->
             <div id="subtab-content-3" class="subtab-content" style="display: none;">
                 <div class="clinical-box">
-                    <h4>🧪 Panel Analítico Crítico de Guardia</h4>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size:13px;">
-                        <div><label>🩸 Hemoglobina (g/dL):</label><input type="text" id="lab-hb" placeholder="Ej. 12.5" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></div>
-                        <div><label>🦠 Leucocitos (x10^3):</label><input type="text" id="lab-leuco" placeholder="Ej. 11,200" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></div>
-                        <div><label>📈 Abastonados / Cayados (%):</label><input type="text" id="lab-cayados" placeholder="Ej. 8%" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></div>
-                        <div><label>💧 Creatinina (mg/dL):</label><input type="text" id="lab-creat" placeholder="Ej. 0.9" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></div>
-                        <div><label>⚡ Lactato Sérico (mmol/L):</label><input type="text" id="lab-lactato" placeholder="Ej. 1.2" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></div>
-                        <div><label>🩸 Coagulación (INR):</label><input type="text" id="lab-inr" placeholder="Ej. 1.0" style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></div>
+                    <h4><span>🧪 Analizador de Laboratorio & Panel de Guardia por Fechas</span></h4>
+                    <p style="font-size: 12px; color: #64748b;">Ingresa los valores analíticos por fecha de control para visualizar su tendencia y evolución:</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px;">
+                        <div><label style="font-size:11px; font-weight:bold;">Fecha Examen:</label><input type="date" id="lab-fecha" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Hb (g/dL):</label><input type="text" id="lab-hb" placeholder="12.0" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Leucocitos:</label><input type="text" id="lab-leuco" placeholder="11000" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Abastonados (%):</label><input type="text" id="lab-cayados" placeholder="6%" style="width:100%; padding:4px;"></div>
                     </div>
-                </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px;">
+                        <div><label style="font-size:11px; font-weight:bold;">Plaquetas:</label><input type="text" id="lab-plaquetas" placeholder="250k" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Creatinina:</label><input type="text" id="lab-creat" placeholder="0.8" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Urea:</label><input type="text" id="lab-urea" placeholder="30" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Lactato:</label><input type="text" id="lab-lactato" placeholder="1.1" style="width:100%; padding:4px;"></div>
+                    </div>
 
-                <div class="clinical-box">
-                    <h4>🧮 Escalas de Evaluación Rápida (Alvarado / Tokio)</h4>
-                    <div style="display: flex; gap: 15px; font-size:13px;">
-                        <div style="flex:1;">
-                            <label style="font-weight:bold;">Alvarado (Apendicitis):</label>
-                            <input type="text" id="score-alvarado" placeholder="Puntaje ej. 8 (Alta probabilidad)" style="width:100%; padding:6px; margin-top:4px; border:1px solid #fbcfe8; border-radius:4px;">
-                        </div>
-                        <div style="flex:1;">
-                            <label style="font-weight:bold;">Tokio TG18 (Colecistitis):</label>
-                            <input type="text" id="score-tokio" placeholder="Grado I / II / III" style="width:100%; padding:6px; margin-top:4px; border:1px solid #fbcfe8; border-radius:4px;">
-                        </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;">
+                        <div><label style="font-size:11px; font-weight:bold;">TGO / TGP:</label><input type="text" id="lab-tgo" placeholder="25 / 30" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Bilirrubinas (T/D):</label><input type="text" id="lab-bili" placeholder="0.8 / 0.2" style="width:100%; padding:4px;"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">INR / TP:</label><input type="text" id="lab-inr" placeholder="1.0" style="width:100%; padding:4px;"></div>
+                    </div>
+
+                    <div style="background: #fdf2f8; padding: 10px; border-radius: 8px; border: 1px dashed var(--border-pink); margin-top: 10px;">
+                        <label style="font-size:12px; font-weight:bold; color:var(--primary-dark);">📷 Adjuntar Foto o Ticket de Laboratorio (IA OCR):</label>
+                        <input type="file" accept="image/*" capture="environment" style="margin-top:5px; font-size:12px;">
                     </div>
                 </div>
             </div>
 
-            <!-- SUBTAB 4: TRATAMIENTO Y PLAN -->
+            <!-- SUBTAB 4: PRESCRIPCIÓN MÉDICA Y PLAN -->
             <div id="subtab-content-4" class="subtab-content" style="display: none;">
                 <div class="clinical-box">
-                    <h4>💊 Indicaciones Médicas Diarias & Prescripción</h4>
-                    <textarea id="txt-indicaciones" rows="5" placeholder="1. Dieta blanda / Régimen hipograso&#10;2. Cloruro de Sodio 9‰ 1000cc en 24h&#10;3. Tramadol 100mg + Metamizol 2g en 1000cc CIV c/24h&#10;4. Ceftriaxona 2g IV c/24h" style="width:100%; padding:8px; border:1px solid #fbcfe8; border-radius:6px;"></textarea>
+                    <h4><span>💊 Indicaciones Médicas Diarias Preablecidas & Modificables</span></h4>
+                    <p style="font-size: 12px; color: #64748b;">Selecciona o modifica las indicaciones según la evolución del paciente:</p>
+                    <textarea id="txt-indicaciones" rows="8" style="width:100%; padding:8px; border:1px solid #fbcfe8; border-radius:6px; font-family:monospace; font-size:12px;">1. Reposo relativo / Cabecera a 30° / Movilización precoz asistida.
+2. Régimen: Dieta blanda / Hipograsa (Tolerancia oral adecuada).
+3. Control de funciones vitales c/ 4 horas + Balance hídrico estricto (BHE) + Saturación.
+4. Hidratación parenteral: Cloruro de Sodio 9‰ 1000cc en 24h (Vía salinizada por tolerancia oral).
+5. Protector gástrico: Omeprazol 40 mg IV c/24h (Diluido en 100 cc SF en 15 min).
+6. Antibioticoterapia: Ceftriaxona 2g IV c/24h (Día N° 02 de tratamiento).
+7. Analgesia / Antinflamatorio: Tramadol 100 mg + Metamizol 2g en 1000cc CIV a pasar en 24h + Paracetamol 1g IV PRN a dolor intenso (EVA > 6).
+8. Curación de herida operatoria c/ 48 horas / Vigilar débito por drenaje y características.</textarea>
                 </div>
 
                 <div class="clinical-box">
-                    <h4>📝 Plan Terapéutico y Bitácora de Decisiones</h4>
-                    <textarea id="txt-plan" rows="3" placeholder="Control de débito por drenaje, evaluación por cardiología pendiente, programar alta para mañana..." style="width:100%; padding:8px; border:1px solid #fbcfe8; border-radius:6px;"></textarea>
+                    <h4><span>📋 Plan Diario, Pendientes y Criterios de Alta</span></h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">Pendientes de Estudios / Interconsultas:</label>
+                            <textarea id="txt-pendientes" rows="3" placeholder="Ej. Control ecográfico de control a las 08:00 a.m. / Esperando respuesta de cardiología..." style="width:100%; padding:6px; border:1px solid #fbcfe8; border-radius:4px;"></textarea>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">Evaluación de Alta Médica:</label>
+                            <select id="sel-alta" style="width:100%; padding:8px; margin-top:5px; border:1px solid #fbcfe8; border-radius:6px;">
+                                <option value="No">No apto (Continúa hospitalizado)</option>
+                                <option value="Candidato a Alta Hoy">🟢 Candidato a Alta Médica Hoy (Libera Cama)</option>
+                            </select>
+                            <input type="text" id="txt-indicaciones-alta" placeholder="Indicaciones de alta para receta..." style="width:100%; margin-top:5px; padding:6px;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <button class="btn-pink" id="btn-guardar-ficha" style="margin-top: 15px; width: 100%; font-size: 15px; padding: 12px;">💾 Guardar Todos los Cambios del Paciente</button>
+            <button class="btn-pink" id="btn-guardar-ficha" style="margin-top: 15px; width: 100%; font-size: 15px; padding: 12px;">💾 Guardar Ficha Integral del Paciente</button>
         </div>
     </main>
 
-    <!-- CONTENIDO DE LA VISTA: RESUMEN DE GUARDIA -->
+    <!-- VISTA: CALCULADORAS Y SCORES CLÍNICOS -->
+    <main id="seccion-escalas" class="vista-seccion" style="display: none;">
+        <div class="paciente-detalle-container">
+            <h3 style="color: #be185d; margin-top:0;">🧮 Calculadoras Quirúrgicas y Scores de Guardia</h3>
+            <p style="font-size: 13px; color: #64748b;">Selecciona la escala que requieres evaluar para tu paciente:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px;">
+                <div class="clinical-box">
+                    <h4>Alvarado (Apendicitis Aguda)</h4>
+                    <p style="font-size: 12px; color: #64748b;">Evalúa migración del dolor, anorexia, náuseas, rebote, fiebre y leucocitosis.</p>
+                    <input type="text" id="calc-alvarado-res" placeholder="Puntaje obtenido (Ej. 8 - Alta probabilidad)" style="width:100%; padding:6px; margin-top:5px;">
+                </div>
+                <div class="clinical-box">
+                    <h4>Criterios de Tokio (TG18/TG21 - Colecistitis)</h4>
+                    <p style="font-size: 12px; color: #64748b;">Estadifica la severidad local y sistémica de la inflamación biliar.</p>
+                    <input type="text" id="calc-tokio-res" placeholder="Grado I, II o III" style="width:100%; padding:6px; margin-top:5px;">
+                </div>
+                <div class="clinical-box">
+                    <h4>Escala de Caprini (Riesgo TVP / Tromboembolia)</h4>
+                    <p style="font-size: 12px; color: #64748b;">Ponderación de factores de riesgo quirúrgico para profilaxis con HBPM.</p>
+                    <input type="text" id="calc-caprini-res" placeholder="Riesgo Bajo / Moderado / Alto" style="width:100%; padding:6px; margin-top:5px;">
+                </div>
+                <div class="clinical-box">
+                    <h4>Índice de Peritonitis de Mannheim (MPI)</h4>
+                    <p style="font-size: 12px; color: #64748b;">Calcula curva de mortalidad estimada en peritonitis difusa.</p>
+                    <input type="text" id="calc-mpi-res" placeholder="Puntaje y mortalidad estimada" style="width:100%; padding:6px; margin-top:5px;">
+                </div>
+            </div>
+            <button class="btn-pink" onclick="alert('Scores actualizados correctamente en el perfil del paciente activo.')" style="margin-top: 15px;">💾 Guardar Evaluaciones en Ficha</button>
+        </div>
+    </main>
+
+    <!-- VISTA: RESUMEN DE GUARDIA Y PASE -->
     <main id="seccion-resumen" class="vista-seccion" style="display: none;">
         <div class="paciente-detalle-container">
-            <h3 style="color: #be185d; margin-top:0;">📑 Resumen y Pase de Guardia Oficial</h3>
+            <h3 style="color: #be185d; margin-top:0;">📑 Resumen Oficial de Guardia & KPIs</h3>
             <p style="font-size: 13px; color: #64748b;">Reporte consolidado listo para copiar al grupo de WhatsApp del servicio:</p>
             
             <div class="clinical-box" style="background: #fdf2f8;">
