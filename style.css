@@ -1,1 +1,30 @@
-
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+header {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+}
+.cama-card {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 6px solid #10b981; /* Verde por defecto (Estable) */
+}
+.cama-card.amarillo { border-left-color: #f59e0b; }
+.cama-card.rojo { border-left-color: #ef4444; }
+h3 { margin-top: 0; font-size: 18px; color: #1e3a8a; }
