@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const secciones = {
         "torre": document.getElementById("seccion-torre"),
         "hospitalizacion": document.getElementById("seccion-hospitalizacion"),
-        "escalas": document.getElementById("seccion-escalas"),
         "resumen": document.getElementById("seccion-resumen")
     };
 
@@ -17,28 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const tituloFichaPaciente = document.getElementById("titulo-ficha-paciente");
     const btnGuardarFicha = document.getElementById("btn-guardar-ficha");
     const textoPaseWhatsApp = document.getElementById("texto-pase-whatsapp");
-    const selectProcedimiento = document.getElementById("q-procedimiento");
-    const textareaTecnica = document.getElementById("q-tecnica");
 
     const habitaciones = ["218", "219", "220", "221", "222", "223", "224"];
     const letras = ["A", "B"];
 
     let pacientesData = JSON.parse(localStorage.getItem("pacientesData")) || {};
     let camaActiva = null;
-
-    // Autogenerar técnica quirúrgica por IA según el procedimiento seleccionado
-    if (selectProcedimiento) {
-        selectProcedimiento.addEventListener("change", () => {
-            const proc = selectProcedimiento.value;
-            if (proc.includes("Apendicectomía Laparoscópica")) {
-                textareaTecnica.value = "1. Paciente en decúbito dorsal bajo anestesia general.\n2. Asepsia y antisepsia de región operatoria, colocación de campos estériles.\n3. Incisión umbilical supra/infraumbilical, neumoperitoneo con aguja de Veress a 14 mmHg.\n4. Ingreso de trócar 10mm óptico y dos trócares accesorios de 5mm en fosa iliaca izquierda y suprapúbica.\n5. Exploración de cavidad: se evidencia líquido libre turbio en escasa cantidad y apéndice cecal retrocecal inflamado.\n6. Disección del mesoapéndice mediante electrocauterio / bisturí armónico y ligadura de base apendicular con endoloop.\n7. Extracción de pieza operatoria en bolsa endobag por puerto umbilical.\n8. Lavado profuso de cavidad con suero fisiológico templado, verificación de hemostasia y cierre por planos.";
-            } else if (proc.includes("Colecistectomía Laparoscópica")) {
-                textareaTecnica.value = "1. Paciente en decúbito dorsal bajo anestesia general.\n2. Neumoperitoneo mediante aguja de Veress e ingreso de trócar 10mm en ombligo.\n3. Colocación de trócares de trabajo (10mm subcostal derecho, 5mm línea media clavicular y 5mm línea axilar anterior).\n4. Exposición de vesícula biliar y disección del triángulo de Calot logrando la Visión Crítica de Seguridad de Strasberg.\n5. Clivaje y sección de conducto cístico y arteria cística previamente clipados con hemoclips metálicos.\n6. Disección retrógrada de la vesícula biliar de su lecho hepático mediante electrocauterio.\n7. Hemostasia prolija de lecho vesicular, lavado de cavidad y extracción de pieza en endobag.";
-            } else {
-                textareaTecnica.value = "1. Asepsia, antisepsia e incisión según abordaje planificado.\n2. Disección por planos anatómicos hasta cavidad abdominal.\n3. Hallazgos operatorios registrados, ejecución del procedimiento principal sin incidentes.\n4. Cierre de pared por planos anatómicos y piel con sutura reabsorbible / monofilamento.";
-            }
-        });
-    }
 
     navButtons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -71,13 +54,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.className = "cama-card";
                 
                 if (paciente) {
-                    const badgeAlta = paciente.condicionAlta ? ' <span style="background:#d9f99d; color:#365314; padding:2px 6px; border-radius:4px; font-size:10px;">ALTA</span>' : '';
                     card.classList.add(paciente.riesgo || "verde");
                     card.innerHTML = `
-                        <h3>Cama ${numCama} ${badgeAlta}</h3>
+                        <h3>Cama ${numCama} <span>🔴</span></h3>
                         <p><strong>Paciente:</strong> ${paciente.nombre}</p>
                         <p><strong>HC:</strong> ${paciente.hc}</p>
                         <p><strong>Dx:</strong> ${paciente.diagnostico || 'Sin diagnóstico'}</p>
+                        ${paciente.candidatoAlta ? '<p style="color:#059669; font-weight:bold;">✨ Candidato a Alta</p>' : ''}
                     `;
                 } else {
                     card.innerHTML = `
@@ -101,60 +84,63 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector('[data-tab="hospitalizacion"]').classList.add("active");
         secciones.torre.style.display = "none";
         secciones.hospitalizacion.style.display = "block";
-        secciones.escalas.style.display = "none";
         secciones.resumen.style.display = "none";
 
         if (paciente) {
             tituloFichaPaciente.textContent = `📋 Cama ${numCama}: ${paciente.nombre} (HC: ${paciente.hc})`;
-            document.getElementById("anam-motivo").value = paciente.motivo || "";
-            document.getElementById("anam-tiempo").value = paciente.tiempoEnf || "";
-            document.getElementById("anam-relato").value = paciente.relato || "";
             
-            document.getElementById("trat-hta").value = paciente.tratHta || "";
-            document.getElementById("trat-dm2").value = paciente.tratDm2 || "";
-            document.getElementById("trat-irc").value = paciente.tratIrc || "";
-            document.getElementById("ant-quirurgicos").value = paciente.antQuirurgicos || "";
-            
-            document.getElementById("alerta-alergias").value = paciente.alergias || "";
-            document.getElementById("alerta-anticoag").value = paciente.anticoag || "";
-            document.getElementById("riesgos-peri").value = paciente.riesgosPeri || "";
+            document.getElementById("ing-motivo").value = paciente.motivo || "";
+            document.getElementById("ing-tiempo").value = paciente.tiempoEnf || "";
+            document.getElementById("ing-fv").value = paciente.fv || "";
+            document.getElementById("ing-plan-estrategico").value = paciente.planEstrategico || "Observación estricta";
+
+            document.getElementById("tr-hta").value = paciente.trHta || "";
+            document.getElementById("tr-dm2").value = paciente.trDm2 || "";
+            document.getElementById("tr-irc").value = paciente.trIrc || "";
+            document.getElementById("tr-epoc").value = paciente.trEpoc || "";
+            document.getElementById("txt-ant-quirurgicos").value = paciente.antQuirurgicos || "";
+            document.getElementById("txt-riesgos-especialistas").value = paciente.riesgosEspecialistas || "";
+
+            document.getElementById("txt-alergias-intenso").value = paciente.alergiasIntenso || "";
+            document.getElementById("ant-farmaco").value = paciente.antFarmaco || "";
+            document.getElementById("ant-ult-toma").value = paciente.antUltToma || "";
+            document.getElementById("ant-sugerencia").value = paciente.antSugerencia || "";
 
             document.getElementById("q-procedimiento").value = paciente.procedimiento || "Apendicectomía Laparoscópica";
-            document.getElementById("q-abordaje").value = paciente.abordaje || "Laparoscópica";
-            document.getElementById("q-h-inicio").value = paciente.hInicio || "";
-            document.getElementById("q-h-fin").value = paciente.hFin || "";
+            document.getElementById("q-abordaje").value = paciente.abordaje || "Laparoscópico";
             document.getElementById("q-cirujano").value = paciente.cirujano || "";
-            document.getElementById("q-ayudante").value = paciente.ayudante || "";
+            document.getElementById("q-asistente").value = paciente.asistente || "";
             document.getElementById("q-anestesiologo").value = paciente.anestesiologo || "";
-            document.getElementById("q-enfermera").value = paciente.enfermera || "";
-            document.getElementById("q-tipo-anestesia").value = paciente.tipoAnestesia || "";
-            document.getElementById("q-tecnica").value = paciente.tecnica || "";
+            document.getElementById("q-licenciada").value = paciente.licenciada || "";
+            document.getElementById("q-tecnico").value = paciente.tecnico || "";
+            document.getElementById("q-tiempo").value = paciente.qTiempo || "";
             document.getElementById("q-hallazgos").value = paciente.hallazgos || "";
-            document.getElementById("q-drenaje").value = paciente.drenaje || "";
-            document.getElementById("q-debito-drenaje").value = paciente.debitoDrenaje || "";
+            document.getElementById("q-tecnica").value = paciente.qTecnica || "";
+            document.getElementById("q-drenaje").value = paciente.qDrenaje || "";
+            document.getElementById("q-debito").value = paciente.qDebito || "";
 
             document.getElementById("lab-fecha").value = paciente.labFecha || "";
-            document.getElementById("lab-hb").value = paciente.labHb || "";
-            document.getElementById("lab-leuco").value = paciente.labLeuco || "";
-            document.getElementById("lab-cayados").value = paciente.labCayados || "";
-            document.getElementById("lab-plaquetas").value = paciente.labPlaquetas || "";
-            document.getElementById("lab-creat").value = paciente.labCreat || "";
-            document.getElementById("lab-urea").value = paciente.labUrea || "";
-            document.getElementById("lab-lactato").value = paciente.labLactato || "";
-            document.getElementById("lab-pcr").value = paciente.labPcr || "";
+            document.getElementById("lab-hb").value = paciente.hb || "";
+            document.getElementById("lab-leuco").value = paciente.leuco || "";
+            document.getElementById("lab-cayados").value = paciente.cayados || "";
+            document.getElementById("lab-plaquetas").value = paciente.plaquetas || "";
+            document.getElementById("lab-creat").value = paciente.creat || "";
+            document.getElementById("lab-urea").value = paciente.urea || "";
+            document.getElementById("lab-glucosa").value = paciente.glucosa || "";
+            document.getElementById("lab-lactato").value = paciente.lactato || "";
+            document.getElementById("score-alvarado").value = paciente.alvarado || "";
 
-            document.getElementById("txt-indicaciones").value = paciente.indicaciones || document.getElementById("txt-indicaciones").value;
-            document.getElementById("chk-condicion-alta").checked = paciente.condicionAlta || false;
-            document.getElementById("txt-indicaciones-alta").value = paciente.indicacionesAlta || "";
+            if(paciente.indicaciones) document.getElementById("txt-indicaciones").value = paciente.indicaciones;
+            document.getElementById("chk-candidato-alta").checked = paciente.candidatoAlta || false;
+            document.getElementById("txt-indicaciones-alta").value = paciente.indAlta || "";
 
             document.getElementById("chk-hta").checked = paciente.hta || false;
             document.getElementById("chk-dm2").checked = paciente.dm2 || false;
             document.getElementById("chk-irc").checked = paciente.irc || false;
+            document.getElementById("chk-epoc").checked = paciente.epoc || false;
         } else {
             tituloFichaPaciente.textContent = `📋 Cama ${numCama} - Sin paciente asignado.`;
-            document.querySelectorAll(".paciente-detalle-container input[type='text'], .paciente-detalle-container textarea, .paciente-detalle-container input[type='date'], .paciente-detalle-container input[type='time']").forEach(el => {
-                if(el.id !== "txt-indicaciones") el.value = "";
-            });
+            document.querySelectorAll(".paciente-detalle-container input[type='text'], .paciente-detalle-container textarea").forEach(el => el.value = "");
             document.querySelectorAll(".paciente-detalle-container input[type='checkbox']").forEach(el => el.checked = false);
         }
     }
@@ -187,90 +173,72 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const p = pacientesData[camaActiva];
-        p.motivo = document.getElementById("anam-motivo").value;
-        p.tiempoEnf = document.getElementById("anam-tiempo").value;
-        p.relato = document.getElementById("anam-relato").value;
+        p.motivo = document.getElementById("ing-motivo").value;
+        p.tiempoEnf = document.getElementById("ing-tiempo").value;
+        p.fv = document.getElementById("ing-fv").value;
+        p.planEstrategico = document.getElementById("ing-plan-estrategico").value;
 
-        p.tratHta = document.getElementById("trat-hta").value;
-        p.tratDm2 = document.getElementById("trat-dm2").value;
-        p.tratIrc = document.getElementById("trat-irc").value;
-        p.antQuirurgicos = document.getElementById("ant-quirurgicos").value;
+        p.trHta = document.getElementById("tr-hta").value;
+        p.trDm2 = document.getElementById("tr-dm2").value;
+        p.trIrc = document.getElementById("tr-irc").value;
+        p.trEpoc = document.getElementById("tr-epoc").value;
+        p.antQuirurgicos = document.getElementById("txt-ant-quirurgicos").value;
+        p.riesgosEspecialistas = document.getElementById("txt-riesgos-especialistas").value;
 
-        p.alergias = document.getElementById("alerta-alergias").value;
-        p.anticoag = document.getElementById("alerta-anticoag").value;
-        p.riesgosPeri = document.getElementById("riesgos-peri").value;
+        p.alergiasIntenso = document.getElementById("txt-alergias-intenso").value;
+        p.antFarmaco = document.getElementById("ant-farmaco").value;
+        p.antUltToma = document.getElementById("ant-ult-toma").value;
+        p.antSugerencia = document.getElementById("ant-sugerencia").value;
 
         p.procedimiento = document.getElementById("q-procedimiento").value;
         p.abordaje = document.getElementById("q-abordaje").value;
-        p.hInicio = document.getElementById("q-h-inicio").value;
-        p.hFin = document.getElementById("q-h-fin").value;
         p.cirujano = document.getElementById("q-cirujano").value;
-        p.ayudante = document.getElementById("q-ayudante").value;
+        p.asistente = document.getElementById("q-asistente").value;
         p.anestesiologo = document.getElementById("q-anestesiologo").value;
-        p.enfermera = document.getElementById("q-enfermera").value;
-        p.tipoAnestesia = document.getElementById("q-tipo-anestesia").value;
-        p.tecnica = document.getElementById("q-tecnica").value;
+        p.licenciada = document.getElementById("q-licenciada").value;
+        p.tecnico = document.getElementById("q-tecnico").value;
+        p.qTiempo = document.getElementById("q-tiempo").value;
         p.hallazgos = document.getElementById("q-hallazgos").value;
-        p.drenaje = document.getElementById("q-drenaje").value;
-        p.debitoDrenaje = document.getElementById("q-debito-drenaje").value;
+        p.qTecnica = document.getElementById("q-tecnica").value;
+        p.qDrenaje = document.getElementById("q-drenaje").value;
+        p.qDebito = document.getElementById("q-debito").value;
 
         p.labFecha = document.getElementById("lab-fecha").value;
-        p.labHb = document.getElementById("lab-hb").value;
-        p.labLeuco = document.getElementById("lab-leuco").value;
-        p.labCayados = document.getElementById("lab-cayados").value;
-        p.labPlaquetas = document.getElementById("lab-plaquetas").value;
-        p.labCreat = document.getElementById("lab-creat").value;
-        p.labUrea = document.getElementById("lab-urea").value;
-        p.labLactato = document.getElementById("lab-lactato").value;
-        p.labPcr = document.getElementById("lab-pcr").value;
+        p.hb = document.getElementById("lab-hb").value;
+        p.leuco = document.getElementById("lab-leuco").value;
+        p.cayados = document.getElementById("lab-cayados").value;
+        p.plaquetas = document.getElementById("lab-plaquetas").value;
+        p.creat = document.getElementById("lab-creat").value;
+        p.urea = document.getElementById("lab-urea").value;
+        p.glucosa = document.getElementById("lab-glucosa").value;
+        p.lactato = document.getElementById("lab-lactato").value;
+        p.alvarado = document.getElementById("score-alvarado").value;
 
         p.indicaciones = document.getElementById("txt-indicaciones").value;
-        p.condicionAlta = document.getElementById("chk-condicion-alta").checked;
-        p.indicacionesAlta = document.getElementById("txt-indicaciones-alta").value;
+        p.candidatoAlta = document.getElementById("chk-candidato-alta").checked;
+        p.indAlta = document.getElementById("txt-indicaciones-alta").value;
 
         p.hta = document.getElementById("chk-hta").checked;
         p.dm2 = document.getElementById("chk-dm2").checked;
         p.irc = document.getElementById("chk-irc").checked;
+        p.epoc = document.getElementById("chk-epoc").checked;
 
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Ficha clínica y quirúrgica completa guardada con éxito!");
+        alert("¡Ficha clínica y quirúrgica avanzada guardada con éxito!");
         renderCenso();
     });
-
-    // Calculadora de Escalas IA
-    const btnCalcularScore = document.getElementById("btn-calcular-score");
-    if (btnCalcularScore) {
-        btnCalcularScore.addEventListener("click", () => {
-            let totalPts = 0;
-            document.querySelectorAll(".alvarado-item").forEach(item => {
-                if (item.checked) totalPts += parseInt(item.value);
-            });
-
-            let gravedad = "";
-            if (totalPts >= 7) gravedad = "⚠️ Apendicitis Aguda altamente probable (Puntaje: " + totalPts + "). Indicación quirúrgica de urgencia.";
-            else if (totalPts >= 5) gravedad = "🟡 Apendicitis probable / Observación estricta o imágenes de apoyo (Puntaje: " + totalPts + ").";
-            else gravedad = "🟢 Baja probabilidad de apendicitis aguda (Puntaje: " + totalPts + ").";
-
-            document.getElementById("resultado-score-ia").textContent = gravedad;
-        });
-    }
 
     function generarPaseWhatsApp() {
         let total = 0;
         let detalle = "";
-        let altas = "";
         Object.keys(pacientesData).forEach(cama => {
             if (pacientesData[cama].nombre) {
                 total++;
-                const p = pacientesData[cama];
-                if (p.condicionAlta) {
-                    altas += `\n- Cama ${cama}: ${p.nombre} (LISTO PARA ALTA)`;
-                }
-                detalle += `\n- Cama ${cama}: ${p.nombre} | Dx: ${p.diagnostico} ${p.debitoDrenaje ? '| Drenaje: ' + p.debitoDrenaje : ''}`;
+                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} (HC: ${pacientesData[cama].hc}) | Plan: ${pacientesData[cama].planEstrategico || 'En observación'}`;
             }
         });
 
-        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes en servicio.\n\n✨ PACIENTES CON CONDICIÓN DE ALTA:${altas || '\nNinguno por el momento'}\n\n📌 PACIENTES HOSPITALIZADOS:${detalle}\n\n⚠️ Revisar indicaciones y reportes en SurgiFlow.`;
+        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes.\n${detalle}\n\n⚠️ Gestionado con SurgiFlow.`;
     }
 
     renderCenso();
