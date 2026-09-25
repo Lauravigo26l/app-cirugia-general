@@ -1,34 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     const gridCamas = document.getElementById("grid-camas");
-    const navButtons = document.querySelectorAll(".nav-btn");
-    const secciones = {
-        "torre": document.getElementById("seccion-torre"),
-        "hospitalizacion": document.getElementById("seccion-hospitalizacion"),
-        "emergencia": document.getElementById("seccion-emergencia")
-    };
-
+    
     const habitaciones = ["218", "219", "220", "221", "222", "223", "224"];
     const letras = ["A", "B"];
 
     let pacientesData = JSON.parse(localStorage.getItem("pacientesData")) || {};
-
-    // Sistema de Pestañas Superiores
-    navButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            navButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-
-            const tabName = btn.getAttribute("data-tab");
-            Object.keys(secciones.forEach(sec => {
-                if(secciones[sec]) secciones[sec].style.display = "none";
-            }));
-            
-            // Mostrar la sección seleccionada
-            if(tabName === "torre") secciones.torre.style.display = "block";
-            if(tabName === "hospitalizacion") secciones.hospitalizacion.style.display = "block";
-            if(tabName === "emergencia") secciones.emergencia.style.display = "block";
-        });
-    });
 
     function renderCenso() {
         gridCamas.innerHTML = "";
