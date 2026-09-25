@@ -91,8 +91,14 @@ document.addEventListener("DOMContentLoaded", () => {
             
             document.getElementById("ing-motivo").value = paciente.motivo || "";
             document.getElementById("ing-tiempo").value = paciente.tiempoEnf || "";
-            document.getElementById("ing-fv").value = paciente.fv || "";
-            document.getElementById("ing-plan-estrategico").value = paciente.planEstrategico || "Observación estricta";
+            document.getElementById("ing-relato").value = paciente.relato || "";
+            
+            document.getElementById("fv-pa").value = paciente.fvPa || "";
+            document.getElementById("fv-fc").value = paciente.fvFc || "";
+            document.getElementById("fv-fr").value = paciente.fvFr || "";
+            document.getElementById("fv-temp").value = paciente.fvTemp || "";
+            document.getElementById("fv-sat").value = paciente.fvSat || "";
+            document.getElementById("ing-plan-estrategico").value = paciente.planEstrategico || "Observación en piso";
 
             document.getElementById("tr-hta").value = paciente.trHta || "";
             document.getElementById("tr-dm2").value = paciente.trDm2 || "";
@@ -128,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("lab-urea").value = paciente.urea || "";
             document.getElementById("lab-glucosa").value = paciente.glucosa || "";
             document.getElementById("lab-lactato").value = paciente.lactato || "";
-            document.getElementById("score-alvarado").value = paciente.alvarado || "";
 
             if(paciente.indicaciones) document.getElementById("txt-indicaciones").value = paciente.indicaciones;
             document.getElementById("chk-candidato-alta").checked = paciente.candidatoAlta || false;
@@ -175,7 +180,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const p = pacientesData[camaActiva];
         p.motivo = document.getElementById("ing-motivo").value;
         p.tiempoEnf = document.getElementById("ing-tiempo").value;
-        p.fv = document.getElementById("ing-fv").value;
+        p.relato = document.getElementById("ing-relato").value;
+
+        p.fvPa = document.getElementById("fv-pa").value;
+        p.fvFc = document.getElementById("fv-fc").value;
+        p.fvFr = document.getElementById("fv-fr").value;
+        p.fvTemp = document.getElementById("fv-temp").value;
+        p.fvSat = document.getElementById("fv-sat").value;
         p.planEstrategico = document.getElementById("ing-plan-estrategico").value;
 
         p.trHta = document.getElementById("tr-hta").value;
@@ -212,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
         p.urea = document.getElementById("lab-urea").value;
         p.glucosa = document.getElementById("lab-glucosa").value;
         p.lactato = document.getElementById("lab-lactato").value;
-        p.alvarado = document.getElementById("score-alvarado").value;
 
         p.indicaciones = document.getElementById("txt-indicaciones").value;
         p.candidatoAlta = document.getElementById("chk-candidato-alta").checked;
@@ -224,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         p.epoc = document.getElementById("chk-epoc").checked;
 
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Ficha clínica y quirúrgica avanzada guardada con éxito!");
+        alert("¡Ficha clínica completa guardada exitosamente!");
         renderCenso();
     });
 
@@ -234,11 +244,11 @@ document.addEventListener("DOMContentLoaded", () => {
         Object.keys(pacientesData).forEach(cama => {
             if (pacientesData[cama].nombre) {
                 total++;
-                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} (HC: ${pacientesData[cama].hc}) | Plan: ${pacientesData[cama].planEstrategico || 'En observación'}`;
+                detalle += `\n- Cama ${cama}: ${pacientesData[cama].nombre} (HC: ${pacientesData[cama].hc}) | Plan: ${pacientesData[cama].planEstrategico || 'En observación'}${pacientesData[cama].candidatoAlta ? ' [✨ ALTA]' : ''}`;
             }
         });
 
-        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes.\n${detalle}\n\n⚠️ Gestionado con SurgiFlow.`;
+        textoPaseWhatsApp.textContent = `📋 PASE DE GUARDIA - CIRUGÍA GENERAL\n🏥 Sede: Hospital II-2 Tarapoto\n🛏️ Censo Total: ${total} pacientes.\n${detalle}\n\n⚠️ Gestionado con SurgiFlow Pro.`;
     }
 
     renderCenso();
