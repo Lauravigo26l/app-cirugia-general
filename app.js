@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const tituloFichaPaciente = document.getElementById("titulo-ficha-paciente");
     const btnGuardarAdmision = document.getElementById("btn-guardar-admision");
 
-    // Habitaciones de tu servicio (218-A a 224-B) + Camas Prestadas y URPA
     const habitaciones = ["218", "219", "220", "221", "222", "223", "224"];
     const letras = ["A", "B"];
     const extras = ["PRESTADA-Medicina-412", "URPA-Recuperacion-01"];
@@ -84,6 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (p) {
             tituloFichaPaciente.textContent = `📋 Anamnesis Cama ${ubi}: ${p.nombre} (HC: ${p.hc})`;
+            document.getElementById("fil-edad").value = p.edad || "";
+            document.getElementById("fil-genero").value = p.genero || "Masculino";
+            document.getElementById("fil-procedencia").value = p.procedencia || "";
+            document.getElementById("fil-fechahora").value = p.fechahora || "";
+            
             document.getElementById("adm-motivo").value = p.motivo || "";
             document.getElementById("adm-tiempo").value = p.tiempo || "";
             document.getElementById("adm-relato").value = p.relato || "";
@@ -91,6 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("fv-fc").value = p.fc || "";
             document.getElementById("fv-fr").value = p.fr || "";
             document.getElementById("fv-t").value = p.t || "";
+            document.getElementById("fv-glasgow").value = p.glasgow || "";
+
+            document.getElementById("ef-torax").value = p.efTorax || "";
+            document.getElementById("ef-cardio").value = p.efCardio || "";
+            document.getElementById("ef-abdomen").value = p.efAbdomen || "";
+
             document.getElementById("adm-conducta").value = p.conducta || "Observacion";
             document.getElementById("adm-destino").value = p.destino || "";
 
@@ -106,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("anticoag-alerta").value = p.anticoagAlerta || "";
         } else {
             tituloFichaPaciente.textContent = `📋 Cama ${ubi} - Sin paciente registrado.`;
-            document.querySelectorAll("#seccion-admision input[type='text'], #seccion-admision textarea").forEach(el => el.value = "");
+            document.querySelectorAll("#seccion-admision input[type='text'], #seccion-admision textarea, #seccion-admision input[type='datetime-local']").forEach(el => el.value = "");
             document.querySelectorAll("#seccion-admision input[type='checkbox']").forEach(el => el.checked = false);
         }
     }
@@ -134,6 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!pacientesData[camaActiva]) pacientesData[camaActiva] = {};
 
         let p = pacientesData[camaActiva];
+        p.edad = document.getElementById("fil-edad").value;
+        p.genero = document.getElementById("fil-genero").value;
+        p.procedencia = document.getElementById("fil-procedencia").value;
+        p.fechahora = document.getElementById("fil-fechahora").value;
+
         p.motivo = document.getElementById("adm-motivo").value;
         p.tiempo = document.getElementById("adm-tiempo").value;
         p.relato = document.getElementById("adm-relato").value;
@@ -141,6 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
         p.fc = document.getElementById("fv-fc").value;
         p.fr = document.getElementById("fv-fr").value;
         p.t = document.getElementById("fv-t").value;
+        p.glasgow = document.getElementById("fv-glasgow").value;
+
+        p.efTorax = document.getElementById("ef-torax").value;
+        p.efCardio = document.getElementById("ef-cardio").value;
+        p.efAbdomen = document.getElementById("ef-abdomen").value;
+
         p.conducta = document.getElementById("adm-conducta").value;
         p.destino = document.getElementById("adm-destino").value;
 
@@ -156,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
         p.anticoagAlerta = document.getElementById("anticoag-alerta").value;
 
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Anamnesis e ingreso guardados correctamente!");
+        alert("¡Anamnesis avanzada e ingreso guardados correctamente!");
     });
 
     renderCenso();
