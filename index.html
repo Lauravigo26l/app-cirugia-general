@@ -3,130 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SurgiFlow Pro - Módulo 1: Ingreso y Comorbilidades</title>
+    <title>SurgiFlow Pro - Cirugía General Tarapoto</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Encabezado Superior Profesional -->
     <header>
         <div class="logo-area">
-            <h1><span>🏥</span> SurgiFlow Pro <span class="badge-ro">MÓDULO 1: INGRESO & CLÍNICA</span></h1>
+            <h1>
+                <span>🏥</span> SurgiFlow <span class="badge-ro">PRO R2</span>
+            </h1>
             <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">
                 🏥 HOSPITAL TARAPOTO II-2 MINSA &bull; <strong>Dra. Vigo Gamboa Laura Tatiana</strong>
             </p>
         </div>
+        <div class="user-info">
+            <span>🔴 Guardia Activa &bull; Censo en Tiempo Real</span>
+        </div>
     </header>
 
-    <main class="paciente-detalle-container" style="max-width: 900px; margin: 0 auto;">
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="color: #be185d; margin:0;">📋 1. Anamnesis, Ingreso y Antecedentes Quirúrgicos / Médicos</h3>
-            <button class="btn-pink" onclick="alert('📷 IA OCR: Escaneando hoja de admisión...')">📷 Escanear con IA</button>
+    <!-- Barra de Navegación Principal -->
+    <nav class="nav-bar">
+        <button class="nav-btn active" data-tab="torre">📊 Torre de Control & Camas</button>
+        <button class="nav-btn" data-tab="hospitalizacion">🏥 Ficha Clínica: Anamnesis & Comorbilidades</button>
+    </nav>
+
+    <!-- 1. TORRE DE CONTROL Y CAMAS -->
+    <main id="seccion-torre" class="vista-seccion">
+        <div class="section-header">
+            <h3 style="margin:0; color: #be185d;">🛏️ CENSO OFICIAL Y CAMAS (218-A a 224-B + Prestadas / URPA)</h3>
+            <button id="btn-ingreso-general" class="btn-pink">+ Ingresar Nuevo Paciente</button>
         </div>
-
-        <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES -->
-        <div class="clinical-box">
-            <h4>🩺 Motivo de Ingreso, Tiempo y Funciones Vitales</h4>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
-                <div>
-                    <label>Motivo de Ingreso / Síntoma Principal:</label>
-                    <input type="text" id="m1-motivo" placeholder="Ej. Dolor abdominal agudo en fosa iliaca derecha">
-                </div>
-                <div>
-                    <label>Tiempo de Enfermedad (TE):</label>
-                    <input type="text" id="m1-te" placeholder="Ej. 24 horas de evolución, de inicio insidioso">
-                </div>
-            </div>
-            
-            <label style="margin-top: 10px; display:block;">Relato Cronológico / Anamnesis Detallada:</label>
-            <textarea id="m1-relato" rows="3" placeholder="Paciente refiere que cuadro inicia 24 horas antes con dolor tipo cólico en región periumbilical que luego migra a FID..."></textarea>
-
-            <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (FFVV)</h4>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                <div><label>PA (mmHg):</label><input type="text" id="m1-pa" placeholder="120/80"></div>
-                <div><label>FC (lpm):</label><input type="text" id="m1-fc" placeholder="88"></div>
-                <div><label>FR (rpm):</label><input type="text" id="m1-fr" placeholder="18"></div>
-                <div><label>T° (°C):</label><input type="text" id="m1-t" placeholder="38.2"></div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN B: PLAN Y CONDUCTA INICIAL -->
-        <div class="clinical-box">
-            <h4>🎯 Definición de Conducta Inicial y Plan</h4>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
-                <div>
-                    <label>Conducta Quirúrgica / Médica:</label>
-                    <select id="m1-conducta">
-                        <option value="Observacion">Observación estricta en piso</option>
-                        <option value="SOP Urgencia">Programado a SOP de Emergencia</option>
-                        <option value="SOP Electivo">Programado a Cirugía Electiva</option>
-                        <option value="Interconsulta">Interconsulta / Pase a otro servicio</option>
-                        <option value="Alta">Candidato a Alta Médica</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Destino / Cama a desocupar / Observaciones:</label>
-                    <input type="text" id="m1-destino" placeholder="Ej. Paciente ingresa de tópico de cirugía / Cama prestada">
-                </div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN C: COMORBILIDADES CON TRATAMIENTO ESPECÍFICO -->
-        <div class="clinical-box">
-            <h4>🗂️ Comorbilidades Crónicas por Sistemas y Tratamiento</h4>
-            <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Seleccione la comorbilidad e indique obligatoriamente el tratamiento actual que recibe:</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <div class="comorb-item">
-                    <label><input type="checkbox" id="chk-hta"> 🫀 Hipertensión Arterial (HTA)</label>
-                    <input type="text" id="trat-hta" placeholder="Tratamiento: Fármaco, dosis y frecuencia (Ej. Losartán 50mg c/12h)">
-                </div>
-                <div class="comorb-item">
-                    <label><input type="checkbox" id="chk-dm2"> 🩸 Diabetes Mellitus Tipo 2 (DM2)</label>
-                    <input type="text" id="trat-dm2" placeholder="Tratamiento: Fármaco, dosis y frecuencia (Ej. Metformina 850mg c/12h)">
-                </div>
-                <div class="comorb-item">
-                    <label><input type="checkbox" id="chk-irc"> ⚠️ Insuficiencia Renal Crónica (IRC)</label>
-                    <input type="text" id="trat-irc" placeholder="Tratamiento / Estadio / Terapias de reemplazo">
-                </div>
-                <div class="comorb-item">
-                    <label><input type="checkbox" id="chk-epoc"> 🌬️ EPOC / Asma Bronquial</label>
-                    <input type="text" id="trat-epoc" placeholder="Tratamiento inhalatorio / Oxígeno domiciliario">
-                </div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN D: ANTECEDENTES QUIRÚRGICOS (SEPARADOS) -->
-        <div class="clinical-box">
-            <h4>✂️ Antecedentes Quirúrgicos Previos (Historial Operatorio)</h4>
-            <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Detalle intervenciones previas (clave para prever adherencias o eventraciones):</p>
-            <textarea id="m1-ant-quirurgicos" rows="3" placeholder="Ej. 1) Hernioplastia inguinal derecha (Año 2018 - Hospital Belén). 2) Apendicectomía abierta (Año 2015). Sin complicaciones."></textarea>
-        </div>
-
-        <!-- SECCIÓN E: ALERGIAS Y ANTICOAGULANTES (WASHOUT) -->
-        <div class="clinical-box">
-            <h4>🚨 Alergias Críticas (RAMS) & Anticoagulantes (Washout Engine)</h4>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 10px;">
-                <div style="background: #fff1f2; padding: 10px; border-radius: 8px; border: 1px solid #fda4af;">
-                    <label style="color: #9f1239; font-weight: bold;">⚠️ Alergias Medicamentosas (RAMS):</label>
-                    <input type="text" id="m1-alergias" placeholder="Ej. Alérgico a la Penicilina (Genera edema y rash cutáneo)" style="background: white;">
-                </div>
-                <div style="background: #eff6ff; padding: 10px; border-radius: 8px; border: 1px solid #bfdbfe;">
-                    <label style="color: #1e40af; font-weight: bold;">🩸 Anticoagulantes / Antiagregantes (Washout):</label>
-                    <input type="text" id="m1-anticoag" placeholder="Fármaco y última toma (Ej. Aspirina 100mg - Última toma hace 7 días)" style="background: white;">
-                </div>
-            </div>
-        </div>
-
-        <button class="btn-pink" id="btn-guardar-m1" style="margin-top: 15px; width: 100%; padding: 12px; font-size: 15px;">💾 Guardar Módulo 1 (Ingreso y Comorbilidades)</button>
-
+        <div id="grid-camas" class="grid-container"></div>
     </main>
 
-    <script>
-        // Script temporal de prueba para el Módulo 1
-        document.getElementById("btn-guardar-m1").addEventListener("click", () => {
-            alert("¡Módulo 1 guardado correctamente! Comorbilidades con tratamientos y antecedentes quirúrgicos registrados.");
-        });
-    </script>
+    <!-- 2. FICHA CLÍNICA: MÓDULO 1 (Anamnesis, Comorbilidades, Tratamientos, Quirúrgicos) -->
+    <main id="seccion-hospitalizacion" class="vista-seccion" style="display: none;">
+        <div class="paciente-detalle-container" style="max-width: 950px; margin: 0 auto;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: #be185d; margin:0;" id="titulo-ficha-paciente">📋 Ficha de Ingreso y Anamnesis</h3>
+                <button class="btn-pink" onclick="alert('📷 IA OCR: Escaneando hoja física y extrayendo anamnesis y funciones vitales...')">📷 Escanear con IA</button>
+            </div>
+
+            <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES -->
+            <div class="clinical-box">
+                <h4>🩺 Motivo de Ingreso, Tiempo y Funciones Vitales</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
+                    <div>
+                        <label>Motivo de Ingreso / Síntoma Principal:</label>
+                        <input type="text" id="m1-motivo" placeholder="Ej. Dolor abdominal agudo en fosa iliaca derecha">
+                    </div>
+                    <div>
+                        <label>Tiempo de Enfermedad (TE):</label>
+                        <input type="text" id="m1-te" placeholder="Ej. 24 horas de evolución">
+                    </div>
+                </div>
+                
+                <label style="margin-top: 10px; display:block;">Relato Cronológico / Anamnesis Detallada:</label>
+                <textarea id="m1-relato" rows="3" placeholder="Paciente refiere cuadro clínico caracterizado por..."></textarea>
+
+                <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (FFVV)</h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <div><label>PA (mmHg):</label><input type="text" id="m1-pa" placeholder="120/80"></div>
+                    <div><label>FC (lpm):</label><input type="text" id="m1-fc" placeholder="88"></div>
+                    <div><label>FR (rpm):</label><input type="text" id="m1-fr" placeholder="18"></div>
+                    <div><label>T° (°C):</label><input type="text" id="m1-t" placeholder="38.2"></div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN B: PLAN Y CONDUCTA INICIAL -->
+            <div class="clinical-box">
+                <h4>🎯 Definición de Conducta Inicial y Plan</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
+                    <div>
+                        <label>Conducta Quirúrgica / Médica:</label>
+                        <select id="m1-conducta">
+                            <option value="Observacion">Observación estricta en piso</option>
+                            <option value="SOP Urgencia">Programado a SOP de Emergencia</option>
+                            <option value="SOP Electivo">Programado a Cirugía Electiva</option>
+                            <option value="Interconsulta">Interconsulta / Pase a otro servicio</option>
+                            <option value="Alta">Candidato a Alta Médica</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Destino / Cama a desocupar / Observaciones:</label>
+                        <input type="text" id="m1-destino" placeholder="Ej. Derivar paciente de Emergencia / URPA">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN C: COMORBILIDADES CON TRATAMIENTO ESPECÍFICO -->
+            <div class="clinical-box">
+                <h4>🗂️ Comorbilidades Crónicas por Sistemas y Tratamiento</h4>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                    <div>
+                        <label><input type="checkbox" id="chk-hta"> 🫀 Hipertensión Arterial (HTA)</label>
+                        <input type="text" id="trat-hta" placeholder="Tratamiento: Ej. Losartán 50mg c/12h" style="margin-top:4px;">
+                    </div>
+                    <div>
+                        <label><input type="checkbox" id="chk-dm2"> 🩸 Diabetes Mellitus Tipo 2 (DM2)</label>
+                        <input type="text" id="trat-dm2" placeholder="Tratamiento: Ej. Metformina 850mg c/12h" style="margin-top:4px;">
+                    </div>
+                    <div>
+                        <label><input type="checkbox" id="chk-irc"> ⚠️ Insuficiencia Renal Crónica (IRC)</label>
+                        <input type="text" id="trat-irc" placeholder="Tratamiento / Estadio / Diálisis" style="margin-top:4px;">
+                    </div>
+                    <div>
+                        <label><input type="checkbox" id="chk-epoc"> 🌬️ EPOC / Asma Bronquial</label>
+                        <input type="text" id="trat-epoc" placeholder="Tratamiento inhalatorio" style="margin-top:4px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN D: ANTECEDENTES QUIRÚRGICOS (SEPARADOS) -->
+            <div class="clinical-box">
+                <h4>✂️ Antecedentes Quirúrgicos Previos</h4>
+                <textarea id="m1-ant-quirurgicos" rows="3" placeholder="Detallar cirugías previas, año y lugar..."></textarea>
+            </div>
+
+            <!-- SECCIÓN E: ALERGIAS Y ANTICOAGULANTES -->
+            <div class="clinical-box">
+                <h4>🚨 Alergias Críticas (RAMS) & Anticoagulantes (Washout Engine)</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 10px;">
+                    <div style="background: #fff1f2; padding: 10px; border-radius: 8px; border: 1px solid #fda4af;">
+                        <label style="color: #9f1239; font-weight: bold;">⚠️ Alergias Medicamentosas (RAMS):</label>
+                        <input type="text" id="m1-alergias" placeholder="Ej. Penicilina (Genera rash cutáneo)" style="background: white;">
+                    </div>
+                    <div style="background: #eff6ff; padding: 10px; border-radius: 8px; border: 1px solid #bfdbfe;">
+                        <label style="color: #1e40af; font-weight: bold;">🩸 Anticoagulantes / Antiagregantes:</label>
+                        <input type="text" id="m1-anticoag" placeholder="Ej. Aspirina (Última toma hace 7 días)" style="background: white;">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-pink" id="btn-guardar-m1" style="margin-top: 15px; width: 100%; padding: 12px; font-size: 15px;">💾 Guardar Ficha Clínica Integral del Paciente</button>
+        </div>
+    </main>
+
+    <!-- MODAL DE INGRESO RÁPIDO DE CAMA -->
+    <div id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
+        <div class="modal-content" style="background:white; width:90%; max-width:450px; margin:10% auto; padding:25px; border-radius:12px;">
+            <span id="cerrar-modal" style="float:right; font-size:24px; cursor:pointer;">&times;</span>
+            <h3 style="color:#be185d; margin-top:0;">➕ Asignación de Cama / Paciente</h3>
+            <label style="font-weight:bold;">Seleccionar Ubicación:</label>
+            <select id="modal-select-cama" style="width:100%; padding:8px; margin-top:5px;"></select>
+            <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres:</label>
+            <input type="text" id="modal-nombre" placeholder="Ej. Pérez Gómez, Juan">
+            <label style="font-weight:bold; margin-top:10px; display:block;">Historia Clínica (HC):</label>
+            <input type="text" id="modal-hc" placeholder="Número de HC">
+            <label style="font-weight:bold; margin-top:10px; display:block;">Diagnóstico Principal:</label>
+            <input type="text" id="modal-dx" placeholder="Ej. Apendicitis Aguda">
+            <button id="modal-btn-guardar" class="btn-pink" style="margin-top:20px; width:100%;">Registrar y Abrir Ficha</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
