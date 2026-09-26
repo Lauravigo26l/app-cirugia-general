@@ -15,14 +15,14 @@
             <p>🏥 HOSPITAL TARAPOTO II-2 MINSA &bull; <strong>Dra. Vigo Gamboa Laura Tatiana</strong></p>
         </div>
         <div class="user-info">
-            <span>🔴 Módulo 1: Admisión & Anamnesis</span>
+            <span>🔴 Módulo 1: Admisión, Anamnesis & Examen Clínico Profundo</span>
         </div>
     </header>
 
     <!-- Navegación -->
     <nav class="nav-bar">
         <button class="nav-btn active" data-tab="torre">📊 Torre de Control & Camas</button>
-        <button class="nav-btn" data-tab="admision">🩺 1. Admisión & Anamnesis</button>
+        <button class="nav-btn" data-tab="admision">🩺 1. Admisión & Anamnesis Avanzada</button>
     </nav>
 
     <!-- VISTA 1: TORRE DE CONTROL -->
@@ -34,33 +34,58 @@
         <div id="grid-camas" class="grid-container"></div>
     </main>
 
-    <!-- VISTA 2: ADMISIÓN Y ANAMNESIS DETALLADA -->
+    <!-- VISTA 2: ADMISIÓN Y ANAMNESIS PROFUNDIZADA -->
     <main id="seccion-admision" class="vista-seccion" style="display: none;">
         <div class="paciente-detalle-container">
-            <h3 style="color: #be185d; margin-top:0;" id="titulo-ficha-paciente">📋 Historia Clínica de Ingreso: Seleccione una Cama</h3>
+            <h3 style="color: #be185d; margin-top:0;" id="titulo-ficha-paciente">📋 Historia Clínica de Ingreso y Examen Físico</h3>
             
-            <!-- Bloque 1: Anamnesis y Funciones Vitales -->
+            <!-- Bloque 1: Filiación y Guardia de Ingreso -->
             <div class="clinical-box">
-                <h4>🩺 1. Motivo de Ingreso, Tiempo de Enfermedad y Funciones Vitales</h4>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px;">
-                    <div><label>Motivo de Ingreso:</label><input type="text" id="adm-motivo" placeholder="Ej. Dolor abdominal en FID / Vómitos"></div>
-                    <div><label>Tiempo de Enfermedad:</label><input type="text" id="adm-tiempo" placeholder="Ej. 24 horas de evolución"></div>
-                </div>
-                <label style="margin-top: 10px; display:block;">Relato Cronológico de Enfermedad:</label>
-                <textarea id="adm-relato" rows="3" placeholder="Paciente varón de... con cuadro clínico caracterizado por..."></textarea>
-                
-                <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso</h4>
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                    <div><label>PA (mmHg):</label><input type="text" id="fv-pa" placeholder="120/80"></div>
-                    <div><label>FC (lpm):</label><input type="text" id="fv-fc" placeholder="84"></div>
-                    <div><label>FR (rpm):</label><input type="text" id="fv-fr" placeholder="18"></div>
-                    <div><label>T° (°C):</label><input type="text" id="fv-t" placeholder="37.5"></div>
+                <h4>👤 1. Filiación, Procedencia y Guardia de Ingreso</h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px;">
+                    <div><label>Edad:</label><input type="text" id="fil-edad" placeholder="Ej. 45 años"></div>
+                    <div><label>Género:</label><select id="fil-genero"><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option></select></div>
+                    <div><label>Procedencia:</label><input type="text" id="fil-procedencia" placeholder="Ej. Tarapoto / Yurimaguas"></div>
+                    <div><label>Fecha / Hora Ingreso:</label><input type="datetime-local" id="fil-fechahora"></div>
                 </div>
             </div>
 
-            <!-- Bloque 2: Comorbilidades con Tratamiento al Pie y Antecedentes Quirúrgicos -->
+            <!-- Bloque 2: Anamnesis y Funciones Vitales -->
             <div class="clinical-box">
-                <h4>🗂️ 2. Comorbilidades Crónicas & Tratamiento Específico</h4>
+                <h4>🩺 2. Anamnesis, Funciones Vitales y Estado de Conciencia (Glasgow)</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px;">
+                    <div><label>Motivo de Ingreso:</label><input type="text" id="adm-motivo" placeholder="Ej. Dolor abdominal en FID / Obstrucción intestinal"></div>
+                    <div><label>Tiempo de Enfermedad:</label><input type="text" id="adm-tiempo" placeholder="Ej. 36 horas de evolución, forma insidiosa"></div>
+                </div>
+                <label style="margin-top: 10px; display:block;">Relato Cronológico y Sintomatología Principal:</label>
+                <textarea id="adm-relato" rows="3" placeholder="Paciente refiere que cuadro inicia de forma... con dolor tipo cólico que luego se irradia..."></textarea>
+                
+                <h4 style="margin-top: 15px;">📊 Funciones Vitales & Glasgow</h4>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+                    <div><label>PA (mmHg):</label><input type="text" id="fv-pa" placeholder="120/80"></div>
+                    <div><label>FC (lpm):</label><input type="text" id="fv-fc" placeholder="88"></div>
+                    <div><label>FR (rpm):</label><input type="text" id="fv-fr" placeholder="18"></div>
+                    <div><label>T° (°C):</label><input type="text" id="fv-t" placeholder="38.2"></div>
+                    <div><label>Glasgow (E/V/M):</label><input type="text" id="fv-glasgow" placeholder="15 (4/5/6)"></div>
+                </div>
+            </div>
+
+            <!-- Bloque 3: Examen Físico Regional Estructurado -->
+            <div class="clinical-box">
+                <h4>🔎 3. Examen Físico Regional (Enfoque Quirúrgico)</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px;">
+                    <div><label>Tórax y Pulmones:</label><input type="text" id="ef-torax" placeholder="Murmullo vesicular pasa bien, sin agregados"></div>
+                    <div><label>Cardiovascular:</label><input type="text" id="ef-cardio" placeholder="Ruidos cardíacos rítmicos, no soplos"></div>
+                </div>
+                <div style="margin-top: 10px;">
+                    <label>Examen Abdominal Detallado:</label>
+                    <textarea id="ef-abdomen" rows="3" placeholder="Abdomen blando, depresible, doloroso a la palpación profunda en Fosa Iliaca Derecha. Signo de Blumberg (+). Ruidos hidroaéreos disminuidos. No megalias. Cicatrices previas: No presenta."></textarea>
+                </div>
+            </div>
+
+            <!-- Bloque 4: Comorbilidades con Tratamiento al Pie y Antecedentes Quirúrgicos -->
+            <div class="clinical-box">
+                <h4>🗂️ 4. Comorbilidades Crónicas & Tratamiento Específico</h4>
                 <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
                     <div class="comorb-row">
                         <label><input type="checkbox" id="chk-hta"> 🫀 Hipertensión Arterial (HTA)</label>
@@ -77,12 +102,12 @@
                 </div>
 
                 <h4 style="margin-top: 20px;">✂️ Antecedentes Quirúrgicos Previos</h4>
-                <textarea id="ant-quirurgicos-detalle" rows="2" placeholder="Detallar: ¿Qué cirugía le hicieron?, ¿En qué año?, ¿En qué hospital o lugar?"></textarea>
+                <textarea id="ant-quirurgicos-detalle" rows="2" placeholder="Detallar: ¿Qué cirugía le hicieron?, ¿En qué año?, ¿En qué hospital?"></textarea>
             </div>
 
-            <!-- Bloque 3: Alergias Críticas y Anticoagulantes -->
+            <!-- Bloque 5: Alergias Críticas y Anticoagulantes -->
             <div class="clinical-box">
-                <h4>🚨 3. Alergias Críticas (RAMS) & Anticoagulantes (Washout)</h4>
+                <h4>🚨 5. Alergias Críticas (RAMS) & Anticoagulantes (Washout)</h4>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 10px;">
                     <div style="background: #fff1f2; border: 1px solid #fda4af; padding: 12px; border-radius: 8px;">
                         <label style="color: #9f1239; font-weight: bold;">⚠️ Alergias (RAMS) - Alerta Intensa:</label>
@@ -95,9 +120,9 @@
                 </div>
             </div>
 
-            <!-- Bloque 4: Plan Inicial y Conducta -->
+            <!-- Bloque 6: Plan Inicial y Conducta -->
             <div class="clinical-box">
-                <h4>🎯 4. Conducta / Plan Terapéutico Inmediato</h4>
+                <h4>🎯 6. Conducta / Plan Terapéutico Inmediato</h4>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                     <div>
                         <label>Definir Conducta:</label>
@@ -116,7 +141,7 @@
                 </div>
             </div>
 
-            <button class="btn-pink" id="btn-guardar-admision" style="margin-top: 15px; width: 100%;">💾 Guardar Anamnesis e Ingreso</button>
+            <button class="btn-pink" id="btn-guardar-admision" style="margin-top: 15px; width: 100%;">💾 Guardar Anamnesis e Ingreso Avanzado</button>
         </div>
     </main>
 
