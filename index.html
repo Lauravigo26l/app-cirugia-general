@@ -26,7 +26,7 @@
     <!-- Barra de Navegación Principal -->
     <nav class="nav-bar">
         <button class="nav-btn active" data-tab="torre">📊 Torre de Control & Camas</button>
-        <button class="nav-btn" data-tab="hospitalizacion">🏥 Ficha Clínica: Anamnesis & Comorbilidades</button>
+        <button class="nav-btn" data-tab="hospitalizacion">🏥 Ficha Clínica Integral</button>
     </nav>
 
     <!-- 1. TORRE DE CONTROL Y CAMAS -->
@@ -38,247 +38,232 @@
         <div id="grid-camas" class="grid-container"></div>
     </main>
 
-    <!-- 2. FICHA CLÍNICA: MÓDULO 1 (Anamnesis, Comorbilidades, Quirúrgicos Estructurados) -->
+    <!-- 2. FICHA CLÍNICA INTEGRAL (Módulo 1 + Módulo 2 de Riesgos) -->
     <main id="seccion-hospitalizacion" class="vista-seccion" style="display: none;">
         <div class="paciente-detalle-container" style="max-width: 950px; margin: 0 auto;">
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="color: #be185d; margin:0;" id="titulo-ficha-paciente">📋 Ficha de Ingreso y Anamnesis</h3>
-                <button class="btn-pink" onclick="alert('📷 IA OCR: Escaneando hoja física y extrayendo parámetros clínicos...')">📷 Escanear con IA</button>
+                <h3 style="color: #be185d; margin:0;" id="titulo-ficha-paciente">📋 Ficha Clínica Integral</h3>
+                <button class="btn-pink" onclick="alert('📷 IA OCR: Escaneando documento médico...')">📷 Escanear con IA</button>
             </div>
 
-            <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES -->
-            <div class="clinical-box">
-                <h4>🩺 Motivo de Ingreso, Tiempo y Funciones Vitales (Modificables)</h4>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
-                    <div>
-                        <label>Motivo de Ingreso / Síntoma Principal:</label>
-                        <input type="text" id="m1-motivo" placeholder="Ej. Dolor abdominal agudo en fosa iliaca derecha">
+            <!-- Sub-pestañas internas para mantener ordenado sin perder nada -->
+            <div class="subtabs">
+                <button class="subtab-btn active" onclick="cambiarSubTabHosp(1)">1. Anamnesis & Comorbilidades</button>
+                <button class="subtab-btn" onclick="cambiarSubTabHosp(2)">2. Riesgos Perioperatorios</button>
+            </div>
+
+            <!-- CONTENIDO SUB-PESTAÑA 1: MÓDULO 1 (Ya existente y seguro) -->
+            <div id="hosp-content-1" class="hosp-content">
+                <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES -->
+                <div class="clinical-box">
+                    <h4>🩺 Motivo de Ingreso, Tiempo y Funciones Vitales (Modificables)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
+                        <div>
+                            <label>Motivo de Ingreso / Síntoma Principal:</label>
+                            <input type="text" id="m1-motivo" placeholder="Ej. Dolor abdominal agudo en fosa iliaca derecha">
+                        </div>
+                        <div>
+                            <label>Tiempo de Enfermedad (TE):</label>
+                            <input type="text" id="m1-te" placeholder="Ej. 24 horas de evolución">
+                        </div>
                     </div>
-                    <div>
-                        <label>Tiempo de Enfermedad (TE):</label>
-                        <input type="text" id="m1-te" placeholder="Ej. 24 horas de evolución">
+                    
+                    <label style="margin-top: 10px; display:block;">Relato Cronológico / Anamnesis Detallada:</label>
+                    <textarea id="m1-relato" rows="3" placeholder="Paciente refiere cuadro clínico caracterizado por..."></textarea>
+
+                    <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (Predeterminadas y Modificables)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        <div><label>PA (mmHg):</label><input type="text" id="m1-pa" value="120/80"></div>
+                        <div><label>FC (lpm):</label><input type="text" id="m1-fc" value="80"></div>
+                        <div><label>FR (rpm):</label><input type="text" id="m1-fr" value="18"></div>
+                        <div><label>T° (°C):</label><input type="text" id="m1-t" value="36.8"></div>
                     </div>
                 </div>
-                
-                <label style="margin-top: 10px; display:block;">Relato Cronológico / Anamnesis Detallada:</label>
-                <textarea id="m1-relato" rows="3" placeholder="Paciente refiere cuadro clínico caracterizado por..."></textarea>
 
-                <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (Predeterminadas y Modificables)</h4>
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                    <div><label>PA (mmHg):</label><input type="text" id="m1-pa" value="120/80"></div>
-                    <div><label>FC (lpm):</label><input type="text" id="m1-fc" value="80"></div>
-                    <div><label>FR (rpm):</label><input type="text" id="m1-fr" value="18"></div>
-                    <div><label>T° (°C):</label><input type="text" id="m1-t" value="36.8"></div>
+                <!-- SECCIÓN B: PLAN Y CONDUCTA INICIAL -->
+                <div class="clinical-box">
+                    <h4>🎯 Definición de Conducta Inicial y Plan</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
+                        <div>
+                            <label>Conducta Quirúrgica / Médica:</label>
+                            <select id="m1-conducta">
+                                <option value="Observacion">Observación estricta en piso</option>
+                                <option value="SOP Urgencia">Programado a SOP de Emergencia</option>
+                                <option value="SOP Electivo">Programado a Cirugía Electiva</option>
+                                <option value="Interconsulta">Interconsulta / Pase a otro servicio</option>
+                                <option value="Alta">Candidato a Alta Médica</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Destino / Cama / Observaciones:</label>
+                            <input type="text" id="m1-destino" placeholder="Ej. Retenido en URPA / Cama Prestada">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN C: COMORBILIDADES CON TRATAMIENTO ESPECÍFICO -->
+                <div class="clinical-box">
+                    <h4>🗂️ Comorbilidades Crónicas por Sistemas y Tratamiento</h4>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                        <div>
+                            <label><input type="checkbox" id="chk-hta"> 🫀 Hipertensión Arterial (HTA)</label>
+                            <input type="text" id="trat-hta" placeholder="Tratamiento: Ej. Losartán 50mg c/12h" style="margin-top:4px;">
+                        </div>
+                        <div>
+                            <label><input type="checkbox" id="chk-dm2"> 🩸 Diabetes Mellitus Tipo 2 (DM2)</label>
+                            <input type="text" id="trat-dm2" placeholder="Tratamiento: Ej. Metformina 850mg c/12h" style="margin-top:4px;">
+                        </div>
+                        <div>
+                            <label><input type="checkbox" id="chk-irc"> ⚠️ Insuficiencia Renal Crónica (IRC)</label>
+                            <input type="text" id="trat-irc" placeholder="Tratamiento / Estadio / Diálisis" style="margin-top:4px;">
+                        </div>
+                        <div>
+                            <label><input type="checkbox" id="chk-epoc"> 🌬️ EPOC / Asma Bronquial</label>
+                            <input type="text" id="trat-epoc" placeholder="Tratamiento inhalatorio" style="margin-top:4px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN D: ANTECEDENTES QUIRÚRGICOS ESTRUCTURADOS -->
+                <div class="clinical-box">
+                    <h4>✂️ Antecedentes Quirúrgicos Previos (Estructurados)</h4>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 2fr 1fr; gap: 8px; margin-top: 8px;">
+                        <div><label style="font-size:11px;">Cirugía Realizada:</label><input type="text" id="aq-cirugia" placeholder="Ej. Apendicectomía"></div>
+                        <div><label style="font-size:11px;">Año:</label><input type="text" id="aq-anio" placeholder="2021"></div>
+                        <div><label style="font-size:11px;">Hospital / Lugar:</label><input type="text" id="aq-lugar" placeholder="Hospital Tarapoto"></div>
+                        <div><label style="font-size:11px;">¿Complicaciones?:</label>
+                            <select id="aq-comp-si">
+                                <option value="No">No</option>
+                                <option value="Sí">Sí</option>
+                            </select>
+                        </div>
+                    </div>
+                    <label style="margin-top: 8px; display:block;">Detalle de Complicaciones (si aplica):</label>
+                    <input type="text" id="aq-detalle-comp" placeholder="Ej. Infección de sitio quirúrgico tratada ambulatoriamente">
+                </div>
+
+                <!-- SECCIÓN E: ALERGIAS Y ANTICOAGULANTES -->
+                <div class="clinical-box">
+                    <h4>🚨 Alergias Críticas (RAMS) & Anticoagulantes (Washout Engine)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 10px;">
+                        <div style="background: #fff1f2; padding: 10px; border-radius: 8px; border: 1px solid #fda4af;">
+                            <label style="color: #9f1239; font-weight: bold;">⚠️ Alergias Medicamentosas (RAMS):</label>
+                            <input type="text" id="m1-alergias" placeholder="Ej. Penicilina (Genera rash cutáneo)" style="background: white;">
+                        </div>
+                        <div style="background: #eff6ff; padding: 10px; border-radius: 8px; border: 1px solid #bfdbfe;">
+                            <label style="color: #1e40af; font-weight: bold;">🩸 Anticoagulantes / Antiagregantes:</label>
+                            <input type="text" id="m1-anticoag" placeholder="Ej. Aspirina (Última toma hace 7 días)" style="background: white;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- SECCIÓN B: PLAN Y CONDUCTA INICIAL -->
-            <div class="clinical-box">
-                <h4>🎯 Definición de Conducta Inicial y Plan</h4>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
-                    <div>
-                        <label>Conducta Quirúrgica / Médica:</label>
-                        <select id="m1-conducta">
-                            <option value="Observacion">Observación estricta en piso</option>
-                            <option value="SOP Urgencia">Programado a SOP de Emergencia</option>
-                            <option value="SOP Electivo">Programado a Cirugía Electiva</option>
-                            <option value="Interconsulta">Interconsulta / Pase a otro servicio</option>
-                            <option value="Alta">Candidato a Alta Médica</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Destino / Cama / Observaciones:</label>
-                        <input type="text" id="m1-destino" placeholder="Ej. Retenido en URPA / Cama Prestada de Traumatología">
+            <!-- CONTENIDO SUB-PESTAÑA 2: MÓDULO 2 (NUEVO: Riesgos Perioperatorios Especializados) -->
+            <div id="hosp-content-2" class="hosp-content" style="display: none;">
+                <div class="clinical-box">
+                    <h4>⚠️ Evaluaciones y Riesgos Perioperatorios de Especialistas</h4>
+                    <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Seleccione el riesgo evaluado y registre detalladamente las sugerencias, visto bueno o restricciones dadas por el especialista:</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <!-- Riesgo Cardiológico -->
+                        <div style="background: #fdf2f8; padding: 12px; border-radius: 8px; border: 1px solid #fbcfe8;">
+                            <label><input type="checkbox" id="r2-cardio-chk"> 🫀 Riesgo Quirúrgico por Cardiología / Medicina Interna</label>
+                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 8px;">
+                                <div>
+                                    <label style="font-size:11px;">Clasificación / Visto Bueno:</label>
+                                    <input type="text" id="r2-cardio-estado" placeholder="Ej. RIESGO LEVE / Apto con restricciones">
+                                </div>
+                                <div>
+                                    <label style="font-size:11px;">Sugerencias / Indicaciones del Cardiólogo:</label>
+                                    <input type="text" id="r2-cardio-sug" placeholder="Ej. Continuar con Bisoprolol 5mg, evitar hipotensión intraoperatoria">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Riesgo Anestésico -->
+                        <div style="background: #fdf2f8; padding: 12px; border-radius: 8px; border: 1px solid #fbcfe8;">
+                            <label><input type="checkbox" id="r2-anestesia-chk"> ⚡ Riesgo Pre-Anestésico (Evaluación por Anestesiología)</label>
+                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 8px;">
+                                <div>
+                                    <label style="font-size:11px;">Clasificación ASA / Vía Aérea:</label>
+                                    <input type="text" id="r2-anestesia-estado" placeholder="Ej. ASA II E / Vía aérea Mallampati II">
+                                </div>
+                                <div>
+                                    <label style="font-size:11px;">Plan / Sugerencias de Anestesia:</label>
+                                    <input type="text" id="r2-anestesia-sug" placeholder="Ej. Anestesia general balanceada / Monitoreo invasivo opcional">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Riesgo Neumológico -->
+                        <div style="background: #fdf2f8; padding: 12px; border-radius: 8px; border: 1px solid #fbcfe8;">
+                            <label><input type="checkbox" id="r2-neumo-chk"> 🫁 Riesgo Quirúrgico Neumológico</label>
+                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 8px;">
+                                <div>
+                                    <label style="font-size:11px;">Estado Funcional:</label>
+                                    <input type="text" id="r2-neumo-estado" placeholder="Ej. EPOC compensado / Apto">
+                                </div>
+                                <div>
+                                    <label style="font-size:11px;">Sugerencias Neumológicas:</label>
+                                    <input type="text" id="r2-neumo-sug" placeholder="Ej. Nebulizaciones con Salbutamol c/8h pre y post-operatorio">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Riesgo Nefrológico -->
+                        <div style="background: #fdf2f8; padding: 12px; border-radius: 8px; border: 1px solid #fbcfe8;">
+                            <label><input type="checkbox" id="r2-nefro-chk"> 🩺 Riesgo Quirúrgico Nefrológico</label>
+                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 8px;">
+                                <div>
+                                    <label style="font-size:11px;">Estado Renal:</label>
+                                    <input type="text" id="r2-nefro-estado" placeholder="Ej. ERC Estadio 3 / No dialítico">
+                                </div>
+                                <div>
+                                    <label style="font-size:11px;">Sugerencias Nefrológicas:</label>
+                                    <input type="text" id="r2-nefro-sug" placeholder="Ej. Balance hídrico estricto, evitar nefrotóxicos (AINEs)">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SECCIÓN C: COMORBILIDADES CON TRATAMIENTO ESPECÍFICO -->
-            <div class="clinical-box">
-                <h4>🗂️ Comorbilidades Crónicas por Sistemas y Tratamiento</h4>
-                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
-                    <div>
-                        <label><input type="checkbox" id="chk-hta"> 🫀 Hipertensión Arterial (HTA)</label>
-                        <input type="text" id="trat-hta" placeholder="Tratamiento: Ej. Losartán 50mg c/12h" style="margin-top:4px;">
-                    </div>
-                    <div>
-                        <label><input type="checkbox" id="chk-dm2"> 🩸 Diabetes Mellitus Tipo 2 (DM2)</label>
-                        <input type="text" id="trat-dm2" placeholder="Tratamiento: Ej. Metformina 850mg c/12h" style="margin-top:4px;">
-                    </div>
-                    <div>
-                        <label><input type="checkbox" id="chk-irc"> ⚠️ Insuficiencia Renal Crónica (IRC)</label>
-                        <input type="text" id="trat-irc" placeholder="Tratamiento / Estadio / Diálisis" style="margin-top:4px;">
-                    </div>
-                    <div>
-                        <label><input type="checkbox" id="chk-epoc"> 🌬️ EPOC / Asma Bronquial</label>
-                        <input type="text" id="trat-epoc" placeholder="Tratamiento inhalatorio" style="margin-top:4px;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECCIÓN D: ANTECEDENTES QUIRÚRGICOS ESTRUCTURADOS -->
-            <div class="clinical-box">
-                <h4>✂️ Antecedentes Quirúrgicos Previos (Estructurados)</h4>
-                <div style="display: grid; grid-template-columns: 2fr 1fr 2fr 1fr; gap: 8px; margin-top: 8px;">
-                    <div><label style="font-size:11px;">Cirugía Realizada:</label><input type="text" id="aq-cirugia" placeholder="Ej. Apendicectomía"></div>
-                    <div><label style="font-size:11px;">Año:</label><input type="text" id="aq-anio" placeholder="2021"></div>
-                    <div><label style="font-size:11px;">Hospital / Lugar:</label><input type="text" id="aq-lugar" placeholder="Hospital Tarapoto"></div>
-                    <div><label style="font-size:11px;">¿Complicaciones?:</label>
-                        <select id="aq-comp-si">
-                            <option value="No">No</option>
-                            <option value="Sí">Sí</option>
-                        </select>
-                    </div>
-                </div>
-                <label style="margin-top: 8px; display:block;">Detalle de Complicaciones (si aplica):</label>
-                <input type="text" id="aq-detalle-comp" placeholder="Ej. Infección de sitio quirúrgico tratada ambulatoriamente">
-            </div>
-
-            <!-- SECCIÓN E: ALERGIAS Y ANTICOAGULANTES -->
-            <div class="clinical-box">
-                <h4>🚨 Alergias Críticas (RAMS) & Anticoagulantes (Washout Engine)</h4>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 10px;">
-                    <div style="background: #fff1f2; padding: 10px; border-radius: 8px; border: 1px solid #fda4af;">
-                        <label style="color: #9f1239; font-weight: bold;">⚠️ Alergias Medicamentosas (RAMS):</label>
-                        <input type="text" id="m1-alergias" placeholder="Ej. Penicilina (Genera rash cutáneo)" style="background: white;">
-                    </div>
-                    <div style="background: #eff6ff; padding: 10px; border-radius: 8px; border: 1px solid #bfdbfe;">
-                        <label style="color: #1e40af; font-weight: bold;">🩸 Anticoagulantes / Antiagregantes:</label>
-                        <input type="text" id="m1-anticoag" placeholder="Ej. Aspirina (Última toma hace 7 días)" style="background: white;">
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn-pink" id="btn-guardar-m1" style="margin-top: 15px; width: 100%; padding: 12px; font-size: 15px;">💾 Guardar Ficha Clínica Integral del Paciente</button>
+            <button class="btn-pink" id="btn-guardar-m1" style="margin-top: 15px; width: 100%; padding: 12px; font-size: 15px;">💾 Guardar Ficha Clínica Integral (Módulos 1 y 2)</button>
         </div>
     </main>
 
-    <!-- ================= MÓDULO 2: RIESGOS PERIOPERATORIOS Y SUGERENCIAS DE ESPECIALISTAS ================= -->
-    <main id="seccion-riesgos" class="vista-seccion" style="display: none;">
-        <div class="paciente-detalle-container" style="max-width: 950px; margin: 0 auto;">
-            <h3 style="color: #be185d; margin-top:0;" id="titulo-riesgos-paciente">⚠️ Módulo 2: Evaluaciones y Riesgos Perioperatorios</h3>
-            <p style="font-size: 13px; color: #64748b;">Registre detalladamente las valoraciones especializadas, clasificaciones y sugerencias formales emitidas para la intervención quirúrgica.</p>
-
-            <!-- 1. Riesgo Cardiológico / Medicina Interna -->
-            <div class="clinical-box">
-                <h4>🫀 1. Riesgo Cardiológico / Medicina Interna</h4>
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 8px;">
-                    <div>
-                        <label>Estatus de Evaluación:</label>
-                        <select id="r2-cardio-estado">
-                            <option value="Pendiente">Pendiente de evaluación</option>
-                            <option value="Aprobado / Bajo Riesgo">Aprobado / Bajo Riesgo Cardiovascular (CLS I-II)</option>
-                            <option value="Aprobado con Recomendaciones">Aprobado con Recomendaciones / Optimización</option>
-                            <option value="Alto Riesgo / Diferir">Alto Riesgo / Sugiere diferir cirugía</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Riesgo Goldman / RCRI:</label>
-                        <input type="text" id="r2-cardio-score" placeholder="Ej. Clase I (1%)">
-                    </div>
-                </div>
-                <label style="margin-top: 8px; display:block;">Sugerencias y Visto Bueno del Cardiólogo / Internista:</label>
-                <textarea id="r2-cardio-sug" rows="2" placeholder="Ej. Continuar con carvedilol matutino, suspender diurético el día de la cirugía, control estricto de PA < 140/90..."></textarea>
-            </div>
-
-            <!-- 2. Riesgo Pre-Anestésico -->
-            <div class="clinical-box">
-                <h4>⚡ 2. Riesgo Pre-Anestésico & Valoración de Vía Aérea</h4>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px;">
-                    <div>
-                        <label>Clasificación ASA:</label>
-                        <select id="r2-asa">
-                            <option value="ASA I">ASA I (Sano)</option>
-                            <option value="ASA II">ASA II (Enfermedad sistémica leve)</option>
-                            <option value="ASA III">ASA III (Enfermedad sistémica severa)</option>
-                            <option value="ASA IV">ASA IV (Amenaza constante para la vida)</option>
-                            <option value="ASA V">ASA V (Moribundo)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Mallampati:</label>
-                        <select id="r2-mallampati">
-                            <option value="Clase I">Mallampati Clase I</option>
-                            <option value="Clase II">Mallampati Clase II</option>
-                            <option value="Clase III">Mallampati Clase III</option>
-                            <option value="Clase IV">Mallampati Clase IV</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Vía Aérea Prevista:</label>
-                        <input type="text" id="r2-viaprevista" placeholder="Ej. Normal / Difícil anticipada">
-                    </div>
-                </div>
-                <label style="margin-top: 8px; display:block;">Plan Anestésico Sugerido:</label>
-                <textarea id="r2-anestesia-sug" rows="2" placeholder="Ej. Anestesia General Balanceada / Bloqueo Peridural + Sedación..."></textarea>
-            </div>
-
-            <!-- 3. Riesgo Neumológico -->
-            <div class="clinical-box">
-                <h4>🫁 3. Riesgo Neumológico</h4>
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 8px;">
-                    <div>
-                        <label>Estatus Neumológico:</label>
-                        <select id="r2-neumo-estado">
-                            <option value="No requerido">No requerido / Sin patología pulmonar</option>
-                            <option value="Aprobado">Aprobado para cirugía bajo cobertura</option>
-                            <option value="Optimización pendiente">Requiere nebulizaciones / Fisioterapia previa</option>
-                        </select>
-                    </div>
-                    <div><label>Espirometría / VEF1:</label><input type="text" id="r2-neumo-vef1" placeholder="Ej. 80% (Normal)"></div>
-                </div>
-                <label style="margin-top: 8px; display:block;">Sugerencias Neumológicas:</label>
-                <textarea id="r2-neumo-sug" rows="2" placeholder="Ej. Usar inhalador de bromuro de ipratropio c/8h pre y post-operatorio, ejercicios respiratorios..."></textarea>
-            </div>
-
-            <!-- 4. Riesgo Nefrológico -->
-            <div class="clinical-box">
-                <h4>🩺 4. Riesgo Nefrológico (En pacientes con IRC o daño renal)</h4>
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 8px;">
-                    <div>
-                        <label>Estatus Nefrológico:</label>
-                        <select id="r2-nefro-estado">
-                            <option value="No requerido">No requerido / Función renal normal</option>
-                            <option value="Aprobado con ajuste de cargas">Aprobado con restricción hídrica y ajuste de fármacos</option>
-                            <option value="En programa de diálisis">Paciente en Hemodiálisis (Coordinar sesión post-op)</option>
-                        </select>
-                    </div>
-                    <div><label>Creatinina / TFG:</label><input type="text" id="r2-nefro-tfg" placeholder="Ej. TFG 45 ml/min"></div>
-                </div>
-                <label style="margin-top: 8px; display:block;">Sugerencias Nefrológicas:</label>
-                <textarea id="r2-nefro-sug" rows="2" placeholder="Ej. Evitar nefrotóxicos (AINEs), monitoreo estricto de balance hídrico estricto..."></textarea>
-            </div>
-
-            <button class="btn-pink" id="btn-guardar-m2" style="margin-top: 15px; width: 100%; padding: 12px;">💾 Guardar Módulo 2 (Evaluaciones y Riesgos)</button>
-        </div>
-    </main>
-
-    <!-- MODAL DE INGRESO RÁPIDO -->
-    <main id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
+    <!-- MODAL DE INGRESO RÁPIDO DE CAMA -->
+    <div id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
         <div class="modal-content" style="background:white; width:90%; max-width:480px; margin:8% auto; padding:25px; border-radius:12px;">
             <span id="cerrar-modal" style="float:right; font-size:24px; cursor:pointer;">&times;</span>
             <h3 style="color:#be185d; margin-top:0;">➕ Asignación de Cama / URPA / Prestada</h3>
-            <label style="font-weight:bold;">Tipo de Ubicación:</label>
+            <label style="font-weight:bold;">Seleccionar Tipo de Ubicación:</label>
             <select id="modal-tipo-ubicacion" style="width:100%; padding:8px; margin-top:5px;" onchange="actualizarSelectorUbicaciones()">
-                <option value="oficial">Cama Propia (218-A a 224-B)</option>
-                <option value="urpa">Retenido en URPA</option>
-                <option value="prestada">Cama Prestada (Servicio Vecino)</option>
+                <option value="oficial">Cama Propia de Servicio (218-A a 224-B)</option>
+                <option value="urpa">Paciente Retenido en URPA</option>
+                <option value="prestada">Cama Prestada de Servicio Vecino</option>
             </select>
+
             <div id="contenedor-selector-cama" style="margin-top:10px;">
-                <label style="font-weight:bold;">Cama Específica:</label>
+                <label style="font-weight:bold;">Seleccionar Cama Específica:</label>
                 <select id="modal-select-cama" style="width:100%; padding:8px; margin-top:5px;"></select>
             </div>
+
             <div id="contenedor-texto-libre" style="margin-top:10px; display:none;">
-                <label style="font-weight:bold;" id="label-texto-libre">Identificador:</label>
-                <input type="text" id="modal-ubicacion-libre" placeholder="Escribir ubicación">
+                <label style="font-weight:bold;" id="label-texto-libre">Indique ubicación:</label>
+                <input type="text" id="modal-ubicacion-libre" placeholder="Escribir ubicación exacta">
             </div>
-            <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres:</label><input type="text" id="modal-nombre" placeholder="Ej. Pérez Gómez, Juan">
-            <label style="font-weight:bold; margin-top:10px; display:block;">Historia Clínica (HC):</label><input type="text" id="modal-hc" placeholder="Número de HC">
-            <label style="font-weight:bold; margin-top:10px; display:block;">Diagnóstico:</label><input type="text" id="modal-dx" placeholder="Diagnóstico principal">
+
+            <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres del Paciente:</label>
+            <input type="text" id="modal-nombre" placeholder="Ej. Pérez Gómez, Juan">
+            <label style="font-weight:bold; margin-top:10px; display:block;">Historia Clínica (HC):</label>
+            <input type="text" id="modal-hc" placeholder="Número de HC">
+            <label style="font-weight:bold; margin-top:10px; display:block;">Diagnóstico Principal / Post-Op:</label>
+            <input type="text" id="modal-dx" placeholder="Ej. Apendicitis Aguda">
             <button id="modal-btn-guardar" class="btn-pink" style="margin-top:20px; width:100%;">Registrar y Abrir Ficha</button>
         </div>
-    </main>
+    </div>
 
     <script src="app.js"></script>
 </body>
