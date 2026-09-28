@@ -250,38 +250,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-    <!-- MODAL DE INGRESO RÁPIDO DE CAMA (Con opción de URPA y Camas Prestadas) -->
-    <div id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
-        <div class="modal-content" style="background:white; width:90%; max-width:480px; margin:8% auto; padding:25px; border-radius:12px;">
-            <span id="cerrar-modal" style="float:right; font-size:24px; cursor:pointer;">&times;</span>
-            <h3 style="color:#be185d; margin-top:0;">➕ Asignación de Cama / URPA / Prestada</h3>
-            <label style="font-weight:bold;">Seleccionar Tipo de Ubicación:</label>
-            <select id="modal-tipo-ubicacion" style="width:100%; padding:8px; margin-top:5px;" onchange="actualizarSelectorUbicaciones()">
-                <option value="oficial">Cama Propia de Servicio (218-A a 224-B)</option>
-                <option value="urpa">Paciente Retenido en URPA</option>
-                <option value="prestada">Cama Prestada de Servicio Vecino (Ej. Traumatología)</option>
-            </select>
-
-            <div id="contenedor-selector-cama" style="margin-top:10px;">
-                <label style="font-weight:bold;">Seleccionar Cama Específica:</label>
-                <select id="modal-select-cama" style="width:100%; padding:8px; margin-top:5px;"></select>
-            </div>
-
-            <div id="contenedor-texto-libre" style="margin-top:10px; display:none;">
-                <label style="font-weight:bold;" id="label-texto-libre">Indique ubicación (Ej. URPA-02 o Traumatología-Cama 310):</label>
-                <input type="text" id="modal-ubicacion-libre" placeholder="Escribir ubicación exacta">
-            </div>
-
-            <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres del Paciente:</label>
-            <input type="text" id="modal-nombre" placeholder="Ej. Pérez Gómez, Juan">
-            <label style="font-weight:bold; margin-top:10px; display:block;">Historia Clínica (HC):</label>
-            <input type="text" id="modal-hc" placeholder="Número de HC">
-            <label style="font-weight:bold; margin-top:10px; display:block;">Diagnóstico Principal / Post-Op:</label>
-            <input type="text" id="modal-dx" placeholder="Ej. Apendicitis Aguda Flegmonosa">
-            <button id="modal-btn-guardar" class="btn-pink" style="margin-top:20px; width:100%;">Registrar y Abrir Ficha</button>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
