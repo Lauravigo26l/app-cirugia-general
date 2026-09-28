@@ -154,6 +154,102 @@
         </div>
     </main>
 
+    <!-- ================= MÓDULO 2: RIESGOS PERIOPERATORIOS ================= -->
+            <div id="ficha-m2" class="ficha-subpanel" style="display: none;">
+                <div class="clinical-box">
+                    <h4>⚠️ Evaluaciones y Riesgos Perioperatorios Especializados</h4>
+                    <p style="font-size: 12px; color: #64748b;">Registre el dictamen, concepto médico y sugerencias detalladas emitidas por cada especialista:</p>
+
+                    <!-- Riesgo Cardiológico / Medicina Interna -->
+                    <div class="riesgo-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 14px; color: #be185d;"><input type="checkbox" id="r-cardio"> 🫀 Riesgo Cardiológico / Medicina Interna</label>
+                            <select id="est-cardio" style="width: 150px; padding: 4px;">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Aprobado / Apto">Aprobado / Apto</option>
+                                <option value="Alto Riesgo / Observacion">Alto Riesgo / Observación</option>
+                            </select>
+                        </div>
+                        <textarea id="sug-cardio" rows="2" placeholder="Sugerencias del cardiólogo (Ej. Continuar antiagregación, metas de PA, ecocardiograma previo)..." style="margin-top: 8px;"></textarea>
+                    </div>
+
+                    <!-- Riesgo Pre-Anestésico -->
+                    <div class="riesgo-card" style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 14px; color: #be185d;"><input type="checkbox" id="r-anestesia"> ⚡ Riesgo Pre-Anestésico (Evaluación por Anestesiología)</label>
+                            <select id="est-anestesia" style="width: 150px; padding: 4px;">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="ASA I / II - Apto">ASA I / II - Apto SOP</option>
+                                <option value="ASA III / Alto Riesgo">ASA III / Alto Riesgo</option>
+                            </select>
+                        </div>
+                        <textarea id="sug-anestesia" rows="2" placeholder="Plan anestésico, previsión de vía aérea difícil, reserva de paquetes globulares..." style="margin-top: 8px;"></textarea>
+                    </div>
+
+                    <!-- Riesgo Neumológico -->
+                    <div class="riesgo-card" style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 14px; color: #be185d;"><input type="checkbox" id="r-neumo"> 🫁 Riesgo Neumológico</label>
+                            <select id="est-neumo" style="width: 150px; padding: 4px;">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Aprobado">Aprobado</option>
+                                <option value="Requiere Tratamiento Previo">Requiere Broncodilatadores / Nebulizaciones</option>
+                            </select>
+                        </div>
+                        <textarea id="sug-neumo" rows="2" placeholder="Sugerencias neumológicas, manejo de EPOC estable, fisioterapia respiratoria..." style="margin-top: 8px;"></textarea>
+                    </div>
+
+                    <!-- Riesgo Nefrológico -->
+                    <div class="riesgo-card" style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 14px; color: #be185d;"><input type="checkbox" id="r-nefro"> 🩺 Riesgo Nefrológico (en IRC / LRA)</label>
+                            <select id="est-nefro" style="width: 150px; padding: 4px;">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Apto para Cirugía">Apto para Cirugía</option>
+                                <option value="Requiere Dialisis Previa">Requiere Sesión de Hemodiálisis Previa</option>
+                            </select>
+                        </div>
+                        <textarea id="sug-nefro" rows="2" placeholder="Manejo de cargas hídricas, protección renal, ajuste de tasas de filtración..." style="margin-top: 8px;"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-pink" id="btn-guardar-integral" style="margin-top: 15px; width: 100%; padding: 12px; font-size: 15px;">💾 Guardar Ficha Clínica Completa (Módulo 1 y 2)</button>
+        </div>
+    </main>
+
+    <!-- MODAL DE INGRESO RÁPIDO DE CAMA -->
+    <div id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
+        <div class="modal-content" style="background:white; width:90%; max-width:480px; margin:8% auto; padding:25px; border-radius:12px;">
+            <span id="cerrar-modal" style="float:right; font-size:24px; cursor:pointer;">&times;</span>
+            <h3 style="color:#be185d; margin-top:0;">➕ Asignación de Cama / URPA / Prestada</h3>
+            <label style="font-weight:bold;">Tipo de Ubicación:</label>
+            <select id="modal-tipo-ubicacion" style="width:100%; padding:8px; margin-top:5px;" onchange="actualizarSelectorUbicaciones()">
+                <option value="oficial">Cama Propia (218-A a 224-B)</option>
+                <option value="urpa">Retenido en URPA</option>
+                <option value="prestada">Cama Prestada (Ej. Traumatología)</option>
+            </select>
+            <div id="contenedor-selector-cama" style="margin-top:10px;">
+                <label style="font-weight:bold;">Cama Específica:</label>
+                <select id="modal-select-cama" style="width:100%; padding:8px; margin-top:5px;"></select>
+            </div>
+            <div id="contenedor-texto-libre" style="margin-top:10px; display:none;">
+                <label style="font-weight:bold;" id="label-texto-libre">Ubicación:</label>
+                <input type="text" id="modal-ubicacion-libre" placeholder="Escribir ubicación">
+            </div>
+            <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres:</label>
+            <input type="text" id="modal-nombre" placeholder="Ej. Pérez Gómez, Juan">
+            <label style="font-weight:bold; margin-top:10px; display:block;">Historia Clínica (HC):</label>
+            <input type="text" id="modal-hc" placeholder="Número de HC">
+            <label style="font-weight:bold; margin-top:10px; display:block;">Diagnóstico Principal:</label>
+            <input type="text" id="modal-dx" placeholder="Ej. Apendicitis Aguda">
+            <button id="modal-btn-guardar" class="btn-pink" style="margin-top:20px; width:100%;">Registrar y Abrir Ficha</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
     <!-- MODAL DE INGRESO RÁPIDO DE CAMA (Con opción de URPA y Camas Prestadas) -->
     <div id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
         <div class="modal-content" style="background:white; width:90%; max-width:480px; margin:8% auto; padding:25px; border-radius:12px;">
