@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const navButtons = document.querySelectorAll(".nav-btn");
     const secciones = {
         "torre": document.getElementById("seccion-torre"),
-        "admision": document.getElementById("seccion-admision")
+        "hospitalizacion": document.getElementById("seccion-hospitalizacion")
     };
 
     const modalIngreso = document.getElementById("modal-ingreso");
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalBtnGuardar = document.getElementById("modal-btn-guardar");
 
     const tituloFichaPaciente = document.getElementById("titulo-ficha-paciente");
-    const btnGuardarAdmision = document.getElementById("btn-guardar-admision");
+    const btnGuardarM1 = document.getElementById("btn-guardar-m1");
 
     const habitaciones = ["218", "219", "220", "221", "222", "223", "224"];
     const letras = ["A", "B"];
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         todasLasUbicaciones.forEach(ubi => {
             const option = document.createElement("option");
             option.value = ubi;
-            option.textContent = `Cama / Ubicación ${ubi}`;
+            option.textContent = `Ubicación / Cama ${ubi}`;
             modalSelectCama.appendChild(option);
 
             const paciente = pacientesData[ubi];
@@ -63,61 +63,52 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.innerHTML = `
                     <h3>${ubi} <span>🟢</span></h3>
                     <p><strong>Estado:</strong> Disponible / Libre</p>
-                    <p><em>Hacer clic para registrar admisión</em></p>
+                    <p><em>Hacer clic para registrar</em></p>
                 `;
             }
 
-            card.addEventListener("click", () => abrirAdmision(ubi));
+            card.addEventListener("click", () => abrirFichaPaciente(ubi));
             gridCamas.appendChild(card);
         });
     }
 
-    function abrirAdmision(ubi) {
+    function abrirFichaPaciente(ubi) {
         camaActiva = ubi;
-        const p = pacientesData[ubi];
+        const paciente = pacientesData[ubi];
 
         navButtons.forEach(b => b.classList.remove("active"));
-        document.querySelector('[data-tab="admision"]').classList.add("active");
+        document.querySelector('[data-tab="hospitalizacion"]').classList.add("active");
         secciones.torre.style.display = "none";
-        secciones.admision.style.display = "block";
+        secciones.hospitalizacion.style.display = "block";
 
-        if (p) {
-            tituloFichaPaciente.textContent = `📋 Anamnesis Cama ${ubi}: ${p.nombre} (HC: ${p.hc})`;
-            document.getElementById("fil-edad").value = p.edad || "";
-            document.getElementById("fil-genero").value = p.genero || "Masculino";
-            document.getElementById("fil-procedencia").value = p.procedencia || "";
-            document.getElementById("fil-fechahora").value = p.fechahora || "";
-            
-            document.getElementById("adm-motivo").value = p.motivo || "";
-            document.getElementById("adm-tiempo").value = p.tiempo || "";
-            document.getElementById("adm-relato").value = p.relato || "";
-            document.getElementById("fv-pa").value = p.pa || "";
-            document.getElementById("fv-fc").value = p.fc || "";
-            document.getElementById("fv-fr").value = p.fr || "";
-            document.getElementById("fv-t").value = p.t || "";
-            document.getElementById("fv-glasgow").value = p.glasgow || "";
+        if (paciente) {
+            tituloFichaPaciente.textContent = `📋 Ficha Cama ${ubi}: ${paciente.nombre} (HC: ${paciente.hc})`;
+            document.getElementById("m1-motivo").value = paciente.motivo || "";
+            document.getElementById("m1-te").value = paciente.te || "";
+            document.getElementById("m1-relato").value = paciente.relato || "";
+            document.getElementById("m1-pa").value = paciente.pa || "";
+            document.getElementById("m1-fc").value = paciente.fc || "";
+            document.getElementById("m1-fr").value = paciente.fr || "";
+            document.getElementById("m1-t").value = paciente.t || "";
+            document.getElementById("m1-conducta").value = paciente.conducta || "Observacion";
+            document.getElementById("m1-destino").value = paciente.destino || "";
 
-            document.getElementById("ef-torax").value = p.efTorax || "";
-            document.getElementById("ef-cardio").value = p.efCardio || "";
-            document.getElementById("ef-abdomen").value = p.efAbdomen || "";
+            document.getElementById("chk-hta").checked = paciente.hta || false;
+            document.getElementById("trat-hta").value = paciente.tHta || "";
+            document.getElementById("chk-dm2").checked = paciente.dm2 || false;
+            document.getElementById("trat-dm2").value = paciente.tDm2 || "";
+            document.getElementById("chk-irc").checked = paciente.irc || false;
+            document.getElementById("trat-irc").value = paciente.tIrc || "";
+            document.getElementById("chk-epoc").checked = paciente.epoc || false;
+            document.getElementById("trat-epoc").value = paciente.tEpoc || "";
 
-            document.getElementById("adm-conducta").value = p.conducta || "Observacion";
-            document.getElementById("adm-destino").value = p.destino || "";
-
-            document.getElementById("chk-hta").checked = p.hta || false;
-            document.getElementById("trat-hta").value = p.tratHta || "";
-            document.getElementById("chk-dm2").checked = p.dm2 || false;
-            document.getElementById("trat-dm2").value = p.tratDm2 || "";
-            document.getElementById("chk-irc").checked = p.irc || false;
-            document.getElementById("trat-irc").value = p.tratIrc || "";
-            document.getElementById("ant-quirurgicos-detalle").value = p.antQx || "";
-
-            document.getElementById("alergia-alerta").value = p.alergiaAlerta || "";
-            document.getElementById("anticoag-alerta").value = p.anticoagAlerta || "";
+            document.getElementById("m1-ant-quirurgicos").value = paciente.antQx || "";
+            document.getElementById("m1-alergias").value = paciente.alergiaDetalle || "";
+            document.getElementById("m1-anticoag").value = paciente.anticoagDetalle || "";
         } else {
-            tituloFichaPaciente.textContent = `📋 Cama ${ubi} - Sin paciente registrado.`;
-            document.querySelectorAll("#seccion-admision input[type='text'], #seccion-admision textarea, #seccion-admision input[type='datetime-local']").forEach(el => el.value = "");
-            document.querySelectorAll("#seccion-admision input[type='checkbox']").forEach(el => el.checked = false);
+            tituloFichaPaciente.textContent = `📋 Cama ${ubi} - Sin paciente asignado.`;
+            document.querySelectorAll("input[type='text'], textarea").forEach(el => el.value = "");
+            document.querySelectorAll("input[type='checkbox']").forEach(el => el.checked = false);
         }
     }
 
@@ -136,48 +127,39 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
         modalIngreso.style.display = "none";
         renderCenso();
-        abrirAdmision(ubiSel);
+        abrirFichaPaciente(ubiSel);
     });
 
-    btnGuardarAdmision.addEventListener("click", () => {
+    btnGuardarM1.addEventListener("click", () => {
         if (!camaActiva) return;
-        if (!pacientesData[camaActiva]) pacientesData[camaActiva] = {};
+        if (!pacientesData[camaActiva]) pacientesData[camaActiva] = { nombre: "Paciente " + camaActiva };
 
         let p = pacientesData[camaActiva];
-        p.edad = document.getElementById("fil-edad").value;
-        p.genero = document.getElementById("fil-genero").value;
-        p.procedencia = document.getElementById("fil-procedencia").value;
-        p.fechahora = document.getElementById("fil-fechahora").value;
-
-        p.motivo = document.getElementById("adm-motivo").value;
-        p.tiempo = document.getElementById("adm-tiempo").value;
-        p.relato = document.getElementById("adm-relato").value;
-        p.pa = document.getElementById("fv-pa").value;
-        p.fc = document.getElementById("fv-fc").value;
-        p.fr = document.getElementById("fv-fr").value;
-        p.t = document.getElementById("fv-t").value;
-        p.glasgow = document.getElementById("fv-glasgow").value;
-
-        p.efTorax = document.getElementById("ef-torax").value;
-        p.efCardio = document.getElementById("ef-cardio").value;
-        p.efAbdomen = document.getElementById("ef-abdomen").value;
-
-        p.conducta = document.getElementById("adm-conducta").value;
-        p.destino = document.getElementById("adm-destino").value;
+        p.motivo = document.getElementById("m1-motivo").value;
+        p.te = document.getElementById("m1-te").value;
+        p.relato = document.getElementById("m1-relato").value;
+        p.pa = document.getElementById("m1-pa").value;
+        p.fc = document.getElementById("m1-fc").value;
+        p.fr = document.getElementById("m1-fr").value;
+        p.t = document.getElementById("m1-t").value;
+        p.conducta = document.getElementById("m1-conducta").value;
+        p.destino = document.getElementById("m1-destino").value;
 
         p.hta = document.getElementById("chk-hta").checked;
-        p.tratHta = document.getElementById("trat-hta").value;
+        p.tHta = document.getElementById("trat-hta").value;
         p.dm2 = document.getElementById("chk-dm2").checked;
-        p.tratDm2 = document.getElementById("trat-dm2").value;
+        p.tDm2 = document.getElementById("trat-dm2").value;
         p.irc = document.getElementById("chk-irc").checked;
-        p.tratIrc = document.getElementById("trat-irc").value;
-        p.antQx = document.getElementById("ant-quirurgicos-detalle").value;
+        p.tIrc = document.getElementById("trat-irc").value;
+        p.epoc = document.getElementById("chk-epoc").checked;
+        p.tEpoc = document.getElementById("trat-epoc").value;
 
-        p.alergiaAlerta = document.getElementById("alergia-alerta").value;
-        p.anticoagAlerta = document.getElementById("anticoag-alerta").value;
+        p.antQx = document.getElementById("m1-ant-quirurgicos").value;
+        p.alergiaDetalle = document.getElementById("m1-alergias").value;
+        p.anticoagDetalle = document.getElementById("m1-anticoag").value;
 
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Anamnesis avanzada e ingreso guardados correctamente!");
+        alert("¡Ficha de Anamnesis y Comorbilidades guardada con éxito!");
     });
 
     renderCenso();
