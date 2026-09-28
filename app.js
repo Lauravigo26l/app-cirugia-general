@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (paciente) {
             tituloFichaPaciente.textContent = `📋 Ficha Cama/Ubicación ${ubi}: ${paciente.nombre} (HC: ${paciente.hc})`;
+            
             // Módulo 1
             document.getElementById("m1-motivo").value = paciente.motivo || "";
             document.getElementById("m1-te").value = paciente.te || "";
@@ -145,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("m1-alergias").value = paciente.alergiaDetalle || "";
             document.getElementById("m1-anticoag").value = paciente.anticoagDetalle || "";
 
-            // Módulo 2 (Riesgos Perioperatorios)
+            // Módulo 2
             document.getElementById("r2-cardio-chk").checked = paciente.r2CardioChk || false;
             document.getElementById("r2-cardio-estado").value = paciente.r2CardioEstado || "";
             document.getElementById("r2-cardio-sug").value = paciente.r2CardioSug || "";
@@ -162,9 +163,24 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("r2-nefro-estado").value = paciente.r2NefroEstado || "";
             document.getElementById("r2-nefro-sug").value = paciente.r2NefroSug || "";
 
+            // Módulo 3 (Quirófano)
+            document.getElementById("qx-proc").value = paciente.qxProc || "Apendicectomía Laparoscópica";
+            document.getElementById("qx-abordaje").value = paciente.qxAbordaje || "Laparoscópica";
+            document.getElementById("qx-hinicio").value = paciente.qxHinicio || "";
+            document.getElementById("qx-hfin").value = paciente.qxHfin || "";
+            document.getElementById("qx-cirujano").value = paciente.qxCirujano || "";
+            document.getElementById("qx-ayudante").value = paciente.qxAyudante || "";
+            document.getElementById("qx-anestesiologo").value = paciente.qxAnestesiologo || "";
+            document.getElementById("qx-tipoanestesia").value = paciente.qxTipoAnestesia || "";
+            document.getElementById("qx-personal").value = paciente.qxPersonal || "";
+            document.getElementById("qx-herida").value = paciente.qxHerida || "Limpia (Clase I)";
+            document.getElementById("qx-drenaje").value = paciente.qxDrenaje || "";
+            document.getElementById("qx-hallazgos").value = paciente.qxHallazgos || "";
+            document.getElementById("qx-tecnica").value = paciente.qxTecnica || "";
+
         } else {
             tituloFichaPaciente.textContent = `📋 Ubicación ${ubi} - Sin paciente asignado.`;
-            document.querySelectorAll("input[type='text'], textarea").forEach(el => {
+            document.querySelectorAll("input[type='text'], textarea, input[type='time']").forEach(el => {
                 if(el.id === "m1-pa") el.value = "120/80";
                 else if(el.id === "m1-fc") el.value = "80";
                 else if(el.id === "m1-fr") el.value = "18";
@@ -210,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!pacientesData[camaActiva]) pacientesData[camaActiva] = { nombre: "Paciente " + camaActiva, hc: "S/N" };
 
         let p = pacientesData[camaActiva];
+        
         // Módulo 1
         p.motivo = document.getElementById("m1-motivo").value;
         p.te = document.getElementById("m1-te").value;
@@ -239,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
         p.alergiaDetalle = document.getElementById("m1-alergias").value;
         p.anticoagDetalle = document.getElementById("m1-anticoag").value;
 
-        // Módulo 2 (Riesgos Perioperatorios)
+        // Módulo 2
         p.r2CardioChk = document.getElementById("r2-cardio-chk").checked;
         p.r2CardioEstado = document.getElementById("r2-cardio-estado").value;
         p.r2CardioSug = document.getElementById("r2-cardio-sug").value;
@@ -256,14 +273,28 @@ document.addEventListener("DOMContentLoaded", () => {
         p.r2NefroEstado = document.getElementById("r2-nefro-estado").value;
         p.r2NefroSug = document.getElementById("r2-nefro-sug").value;
 
+        // Módulo 3 (Quirófano)
+        p.qxProc = document.getElementById("qx-proc").value;
+        p.qxAbordaje = document.getElementById("qx-abordaje").value;
+        p.qxHinicio = document.getElementById("qx-hinicio").value;
+        p.qxHfin = document.getElementById("qx-hfin").value;
+        p.qxCirujano = document.getElementById("qx-cirujano").value;
+        p.qxAyudante = document.getElementById("qx-ayudante").value;
+        p.qxAnestesiologo = document.getElementById("qx-anestesiologo").value;
+        p.qxTipoAnestesia = document.getElementById("qx-tipoanestesia").value;
+        p.qxPersonal = document.getElementById("qx-personal").value;
+        p.qxHerida = document.getElementById("qx-herida").value;
+        p.qxDrenaje = document.getElementById("qx-drenaje").value;
+        p.qxHallazgos = document.getElementById("qx-hallazgos").value;
+        p.qxTecnica = document.getElementById("qx-tecnica").value;
+
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Ficha Clínica Integral (Módulos 1 y 2) guardada exitosamente!");
+        alert("¡Expediente Clínico y Quirúrgico (Módulos 1, 2 y 3) guardado exitosamente!");
     });
 
     renderCenso();
 });
 
-// Función para cambiar entre las sub-pestañas 1 y 2
 function cambiarSubTabHosp(num) {
     document.querySelectorAll('.hosp-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
