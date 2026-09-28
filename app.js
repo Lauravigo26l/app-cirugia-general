@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const gridCamas = document.getElementById("grid-camas");
+    const gridPropias = document.getElementById("grid-camas-propias");
+    const gridUrpa = document.getElementById("grid-camas-urpa");
+    const gridPrestadas = document.getElementById("grid-camas-prestadas");
+
     const navButtons = document.querySelectorAll(".nav-btn");
     const secciones = {
         "torre": document.getElementById("seccion-torre"),
@@ -9,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalIngreso = document.getElementById("modal-ingreso");
     const btnIngresoGeneral = document.getElementById("btn-ingreso-general");
     const cerrarModal = document.getElementById("cerrar-modal");
+    const modalTipoUbicacion = document.getElementById("modal-tipo-ubicacion");
+    const modalSelectUbicacion = document.getElementById("modal-select-ubicacion");
+    const modalCustomUbicacion = document.getElementById("modal-custom-ubicacion");
     const modalBtnGuardar = document.getElementById("modal-btn-guardar");
 
     const tituloFichaPaciente = document.getElementById("titulo-ficha-paciente");
@@ -32,43 +38,86 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function renderCenso() {
-        gridCamas.innerHTML = "";
+        gridPropias.innerHTML = "";
+        gridUrpa.innerHTML = "";
+        gridPrestadas.innerHTML = "";
 
-        // Recopilar todas las camas oficiales + las prestadas de Traumatología + URPA guardadas
-        const listaUbicaciones = [];
-        habitaciones.forEach(hab => letras.forEach(letra => listaUbicaciones.push(`${hab}-${letra}`)));
+        // 1. Camas Propias (218-A a 224-B)
+        habitaciones.forEach(hab => {
+            letras.forEach(letra => {
+                const ubi = `${hab}-${letra}`;
+                crearTarjetaCama(gridPropias, ubi, "propia");
+            });
+        });
 
-        // Agregar dinámicamente las camas prestadas o URPA existentes en la data
+        // 2. Camas URPA y Prestadas registradas dinámicamente
         Object.keys(pacientesData).forEach(ubi => {
-            if ((ubi.startsWith("TRAUMA-") || ubi.startsWith("URPA-")) && !listaUbicaciones.includes(ubi)) {
-                listaUbicaciones.push(ubi);
+            if (ubi.startsWith("URPA-")) {
+                crearTarjetaCama(gridUrpa, ubi, "urpa");
+            } else if (ubi.startsWith("PRESTADA-")) {
+                crearTarjetaCama(gridPrestadas, ubi, "prestada");
             }
         });
 
-        listaUbicaciones.forEach(ubi => {
-            const paciente = pacientesData[ubi];
-            const card = document.createElement("div");
-            card.className = "cama-card";
-            
-            if (paciente) {
-                card.classList.add(paciente.riesgo || "verde");
-                card.innerHTML = `
-                    <h3>${ubi} <span>🔴</span></h3>
-                    <p><strong>Paciente:</strong> ${paciente.nombre}</p>
-                    <p><strong>HC:</strong> ${paciente.hc}</p>
-                    <p><strong>Dx:</strong> ${paciente.diagnostico || 'Sin diagnóstico'}</p>
-                `;
-            } else {
-                card.innerHTML = `
-                    <h3>${ubi} <span>🟢</span></h3>
-                    <p><strong>Estado:</strong> Disponible / Libre</p>
-                    <p><em>Hacer clic para registrar</em></p>
-                `;
-            }
+        // Si no hay URPA o Prestadas, mostrar aviso
+        if (gridUrpa.children.length === 0) {
+            gridUrpa.innerHTML = `<p style="font-size: 13px; color: #64748b; font-style: italic;">No hay pacientes retenidos en URPA actualmente.</p>`;
+        }
+        if (gridPrestadas.children.length === 0) {
+            gridPrestadas.innerHTML = `<p style="font-size: 13px; color: #64748b; font-style: italic;">No hay camas prestadas (Traumatología/Medicina) ocupadas.</p>`;
+        }
+        
+        actualizarSelectorUbicaciones();
+    }
 
-            card.addEventListener("click", () => abrirFichaPaciente(ubi));
-            gridCamas.appendChild(card);
-        });
+    function crearTarjetaCama(contenedor, ubi, tipo) {
+        const paciente = pacientesData[ubi];
+        const card = document.createElement("div");
+        card.className = "cama-card";
+        
+        if (paciente) {
+            card.classList.add(paciente.riesgo || "verde");
+            card.innerHTML = `
+                <h3>${ubi} <span>🔴</span></h3>
+                <p><strong>Paciente:</strong> ${paciente.nombre}</p>
+                <p><strong>HC:</strong> ${paciente.hc}</p>
+                <p><strong>Dx:</strong> ${paciente.diagnostico || 'Sin diagnóstico'}</p>
+            `;
+        } else {
+            card.innerHTML = `
+                <h3>${ubi} <span>🟢</span></h3>
+                <p><strong>Estado:</strong> Disponible / Libre</p>
+                <p><em>Hacer clic para registrar</em></p>
+            `;
+        }
+
+        card.addEventListener("click", () => abrirFichaPaciente(ubi));
+        contenedor.appendChild(card);
+    }
+
+    window.actualizarSelectorUbicaciones = function() {
+        const tipo = modalTipoUbicacion.value;
+        modalSelectUbicacion.innerHTML = "";
+        
+        if (tipo === "propia") {
+            modalSelectUbicacion.style.display = "block";
+            modalCustomUbicacion.style.display = "none";
+            habitaciones.forEach(hab => {
+                letras.forEach(letra => {
+                    const ubi = `${hab}-${letra}`;
+                    if (!pacientesData[ubi]) { // Solo mostrar libres o permitir selección
+                        const opt = document.createElement("option");
+                        opt.value = ubi;
+                        opt.textContent = `Cama ${ubi}`;
+                        modalSelectUbicacion.appendChild(opt);
+                    }
+                });
+            });
+        } else {
+            modalSelectUbicacion.style.display = "none";
+            modalCustomUbicacion.style.display = "block";
+            modalCustomUbicacion.placeholder = tipo === "urpa" ? "Ej. URPA-01, URPA-02" : "Ej. Traumatología - Cama 302";
+        }
     }
 
     function abrirFichaPaciente(ubi) {
@@ -81,14 +130,16 @@ document.addEventListener("DOMContentLoaded", () => {
         secciones.hospitalizacion.style.display = "block";
 
         if (paciente) {
-            tituloFichaPaciente.textContent = `📋 Ficha Cama ${ubi}: ${paciente.nombre} (HC: ${paciente.hc})`;
+            tituloFichaPaciente.textContent = `📋 Ficha Ubicación ${ubi}: ${paciente.nombre} (HC: ${paciente.hc})`;
             document.getElementById("m1-motivo").value = paciente.motivo || "";
             document.getElementById("m1-te").value = paciente.te || "";
             document.getElementById("m1-relato").value = paciente.relato || "";
             document.getElementById("m1-pa").value = paciente.pa || "120/80";
-            document.getElementById("m1-fc").value = paciente.fc || "80";
+            document.getElementById("m1-fc").value = paciente.fc || "82";
             document.getElementById("m1-fr").value = paciente.fr || "18";
             document.getElementById("m1-t").value = paciente.t || "37.0";
+            document.getElementById("m1-sato2").value = paciente.sato2 || "98";
+            document.getElementById("m1-diuresis").value = paciente.diuresis || "1.0";
             document.getElementById("m1-conducta").value = paciente.conducta || "Observacion";
             document.getElementById("m1-destino").value = paciente.destino || "";
 
@@ -98,65 +149,41 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("trat-dm2").value = paciente.tDm2 || "";
             document.getElementById("chk-irc").checked = paciente.irc || false;
             document.getElementById("trat-irc").value = paciente.tIrc || "";
-            document.getElementById("chk-epoc").checked = paciente.epoc || false;
-            document.getElementById("trat-epoc").value = paciente.tEpoc || "";
 
-            document.getElementById("qx-ant-nombre").value = paciente.qxNombre || "";
-            document.getElementById("qx-ant-anio").value = paciente.qxAnio || "";
-            document.getElementById("qx-ant-complicacion").value = paciente.qxComplicacion || "";
-            document.getElementById("m1-ant-quirurgicos-extra").value = paciente.antQxExtra || "";
+            document.getElementById("ant-anio").value = paciente.antAnio || "";
+            document.getElementById("ant-proc").value = paciente.antProc || "";
+            document.getElementById("ant-comp").value = paciente.antComp || "";
+            document.getElementById("ant-lugar").value = paciente.antLugar || "";
 
             document.getElementById("m1-alergias").value = paciente.alergiaDetalle || "";
             document.getElementById("m1-anticoag").value = paciente.anticoagDetalle || "";
         } else {
-            tituloFichaPaciente.textContent = `📋 Cama ${ubi} - Sin paciente asignado.`;
+            tituloFichaPaciente.textContent = `📋 Ubicación ${ubi} - Sin paciente asignado.`;
             document.querySelectorAll("input[type='text'], textarea").forEach(el => {
-                if(el.id === "m1-pa") el.value = "120/80";
-                else if(el.id === "m1-fc") el.value = "80";
-                else if(el.id === "m1-fr") el.value = "18";
-                else if(el.id === "m1-t") el.value = "37.0";
-                else el.value = "";
+                if(!el.id.includes("fv-")) el.value = "";
             });
             document.querySelectorAll("input[type='checkbox']").forEach(el => el.checked = false);
         }
     }
 
-    btnIngresoGeneral.addEventListener("click", () => {
-        actualizarSelectorUbicacion();
-        modalIngreso.style.display = "block";
+    btnIngresoGeneral.addEventListener("click", () => { 
+        modalIngreso.style.display = "block"; 
+        actualizarSelectorUbicaciones();
     });
     cerrarModal.addEventListener("click", () => { modalIngreso.style.display = "none"; });
 
-    window.actualizarSelectorUbicacion = function() {
-        const tipo = document.getElementById("modal-select-tipo").value;
-        const contenedor = document.getElementById("contenedor-selector-especifico");
-        
-        if (tipo === "oficial") {
-            let html = `<label style="font-size:12px; margin-top:5px; display:block;">Seleccione Cama:</label><select id="modal-cama-oficial" style="width:100%; padding:6px;">`;
-            habitaciones.forEach(hab => letras.forEach(letra => html += `<option value="${hab}-${letra}">Cama ${hab}-${letra}</option>`));
-            html += `</select>`;
-            contenedor.innerHTML = html;
-        } else if (tipo === "trauma") {
-            contenedor.innerHTML = `<label style="font-size:12px; margin-top:5px; display:block;">Número de Cama en Traumatología:</label><input type="text" id="modal-cama-trauma" placeholder="Ej. Traumatología - Cama 04">`;
-        } else if (tipo === "urpa") {
-            contenedor.innerHTML = `<label style="font-size:12px; margin-top:5px; display:block;">Identificador en URPA:</label><input type="text" id="modal-cama-urpa" placeholder="Ej. URPA - Camilla 02">`;
-        }
-    };
-
     modalBtnGuardar.addEventListener("click", () => {
-        const tipo = document.getElementById("modal-select-tipo").value;
+        const tipo = modalTipoUbicacion.value;
         let ubiSel = "";
 
-        if (tipo === "oficial") {
-            ubiSel = document.getElementById("modal-cama-oficial").value;
-        } else if (tipo === "trauma") {
-            const val = document.getElementById("modal-cama-trauma").value.trim();
-            if (!val) { alert("Ingrese el detalle de la cama de traumatología."); return; }
-            ubiSel = `TRAUMA-${val}`;
+        if (tipo === "propia") {
+            ubiSel = modalSelectUbicacion.value;
         } else if (tipo === "urpa") {
-            const val = document.getElementById("modal-cama-urpa").value.trim();
-            if (!val) { alert("Ingrese el identificador en URPA."); return; }
-            ubiSel = `URPA-${val}`;
+            const val = modalCustomUbicacion.value.trim();
+            ubiSel = val ? `URPA-${val}` : "URPA-01";
+        } else if (tipo === "prestada") {
+            const val = modalCustomUbicacion.value.trim();
+            ubiSel = val ? `PRESTADA-${val}` : "PRESTADA-Traumatologia-Cama1";
         }
 
         const nombre = document.getElementById("modal-nombre").value;
@@ -184,6 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
         p.fc = document.getElementById("m1-fc").value;
         p.fr = document.getElementById("m1-fr").value;
         p.t = document.getElementById("m1-t").value;
+        p.sato2 = document.getElementById("m1-sato2").value;
+        p.diuresis = document.getElementById("m1-diuresis").value;
         p.conducta = document.getElementById("m1-conducta").value;
         p.destino = document.getElementById("m1-destino").value;
 
@@ -193,19 +222,17 @@ document.addEventListener("DOMContentLoaded", () => {
         p.tDm2 = document.getElementById("trat-dm2").value;
         p.irc = document.getElementById("chk-irc").checked;
         p.tIrc = document.getElementById("trat-irc").value;
-        p.epoc = document.getElementById("chk-epoc").checked;
-        p.tEpoc = document.getElementById("trat-epoc").value;
 
-        p.qxNombre = document.getElementById("qx-ant-nombre").value;
-        p.qxAnio = document.getElementById("qx-ant-anio").value;
-        p.qxComplicacion = document.getElementById("qx-ant-complicacion").value;
-        p.antQxExtra = document.getElementById("m1-ant-quirurgicos-extra").value;
+        p.antAnio = document.getElementById("ant-anio").value;
+        p.antProc = document.getElementById("ant-proc").value;
+        p.antComp = document.getElementById("ant-comp").value;
+        p.antLugar = document.getElementById("ant-lugar").value;
 
         p.alergiaDetalle = document.getElementById("m1-alergias").value;
         p.anticoagDetalle = document.getElementById("m1-anticoag").value;
 
         localStorage.setItem("pacientesData", JSON.stringify(pacientesData));
-        alert("¡Ficha clínica integral guardada con éxito!");
+        alert("¡Ficha clínica integral de ingreso guardada con éxito!");
     });
 
     renderCenso();
