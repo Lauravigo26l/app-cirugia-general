@@ -122,45 +122,36 @@
                 </div>
             </div>
 
-            <!-- CONTENIDO SUB-PESTAÑA 3: MÓDULO 3 (CORREGIDO Y ORGANIZADO) -->
+            <!-- CONTENIDO SUB-PESTAÑA 3: MÓDULO 3 (CORREGIDO: Sin duplicar abordaje, con campos amplios de Hallazgos y Técnica) -->
             <div id="hosp-content-3" class="hosp-content" style="display: none;">
                 <div class="clinical-box">
                     <h4>🔪 Bitácora y Reporte Operatorio Quirúrgico</h4>
                     
-                    <div class="qx-grid-2">
-                        <div>
-                            <label>Procedimiento Quirúrgico Efectuado:</label>
-                            <select id="qx-proc">
-                                <option value="Apendicectomía Laparoscópica">Apendicectomía Laparoscópica</option>
-                                <option value="Apendicectomía Abierta">Apendicectomía Abierta (LPE)</option>
-                                <option value="Colecistectomía Laparoscópica">Colecistectomía Laparoscópica</option>
-                                <option value="Colecistectomía Abierta">Colecistectomía Abierta</option>
-                                <option value="Hernioplastia Inguinal / Umbilical">Hernioplastia Inguinal / Umbilical</option>
-                                <option value="Laparotomía Exploratoria de Emergencia">Laparotomía Exploratoria</option>
-                                <option value="Drenaje de Absceso">Drenaje de Absceso / Psoas</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Abordaje / Vía de Acceso:</label>
-                            <select id="qx-abordaje">
-                                <option value="Laparoscópica">Laparoscópica</option>
-                                <option value="Abierta / LPE">Abierta (Laparotomía)</option>
-                                <option value="Percutánea">Percutánea</option>
-                                <option value="Conversión">Conversión</option>
-                            </select>
-                        </div>
+                    <div style="margin-top: 10px;">
+                        <label>Procedimiento Quirúrgico Efectuado (Abierto o Laparoscópico):</label>
+                        <select id="qx-proc" style="font-weight: bold; color: #be185d;">
+                            <option value="Apendicectomía Laparoscópica">Apendicectomía Laparoscópica</option>
+                            <option value="Apendicectomía Abierta (LPE)">Apendicectomía Abierta (LPE)</option>
+                            <option value="Colecistectomía Laparoscópica">Colecistectomía Laparoscópica</option>
+                            <option value="Colecistectomía Abierta">Colecistectomía Abierta</option>
+                            <option value="Hernioplastia Inguinal (Lichtenstein / TAPP)">Hernioplastia Inguinal (Lichtenstein / TAPP)</option>
+                            <option value="Hernioplastia Umbilical">Hernioplastia Umbilical</option>
+                            <option value="Laparotomía Exploratoria (Perforación / Obstrucción)">Laparotomía Exploratoria de Urgencia</option>
+                            <option value="Drenaje de Absceso (Psoas / Perianal)">Drenaje de Absceso (Psoas / Perianal)</option>
+                        </select>
                     </div>
 
-                    <div class="qx-grid-4">
+                    <div class="qx-grid-4" style="margin-top: 12px;">
                         <div><label>Hora Inicio:</label><input type="time" id="qx-hinicio"></div>
                         <div><label>Hora Fin:</label><input type="time" id="qx-hfin"></div>
                         <div><label>Cirujano Principal:</label><input type="text" id="qx-cirujano" placeholder="Dr. / Dra."></div>
                         <div><label>Primer Ayudante:</label><input type="text" id="qx-ayudante" placeholder="R1 / R2"></div>
                     </div>
 
-                    <div class="qx-grid-2" style="margin-top: 10px;">
+                    <div class="qx-grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
                         <div><label>Anestesiólogo:</label><input type="text" id="qx-anestesiologo" placeholder="Dr. Anestesiólogo"></div>
                         <div><label>Tipo de Anestesia:</label><input type="text" id="qx-tipoanestesia" placeholder="General / Raquídea"></div>
+                        <div><label>Personal (Instr./Circ.):</label><input type="text" id="qx-personal" placeholder="Lic. Enfermería"></div>
                     </div>
 
                     <div class="qx-grid-2" style="margin-top: 10px;">
@@ -173,14 +164,14 @@
                                 <option value="Sucia / Infectada (Clase IV)">Sucia / Infectada (Clase IV)</option>
                             </select>
                         </div>
-                        <div><label>Drenajes Dejados en Cavidad:</label><input type="text" id="qx-drenaje" placeholder="Ej. Dren tubular / Penrose"></div>
+                        <div><label>Drenajes Dejados en Cavidad:</label><input type="text" id="qx-drenaje" placeholder="Ej. Dren tubular / Penrose / Jackson-Pratt"></div>
                     </div>
 
-                    <label style="margin-top: 12px; display:block;">🔍 Hallazgos Operatorios:</label>
-                    <textarea id="qx-hallazgos" rows="2" placeholder="Ej. Líquido libre purulento en cavidad, apéndice inflamado..."></textarea>
+                    <label style="margin-top: 15px; display:block; font-weight: bold; color: #be185d;">🔍 Hallazgos Operatorios:</label>
+                    <textarea id="qx-hallazgos" rows="3" placeholder="Describa detalladamente los hallazgos intraoperatorios (ej. cantidad y características de líquido en cavidad, estado del órgano patológico, etc.)..."></textarea>
 
-                    <label style="margin-top: 10px; display:block;">📝 Técnica Quirúrgica (IA Asistida paso a paso):</label>
-                    <textarea id="qx-tecnica" rows="4" placeholder="Ej. Paciente en decúbito dorsal bajo anestesia general..."></textarea>
+                    <label style="margin-top: 12px; display:block; font-weight: bold; color: #be185d;">📝 Técnica Quirúrgica (IA Asistida paso a paso):</label>
+                    <textarea id="qx-tecnica" rows="6" placeholder="Describa la técnica quirúrgica paso a paso, posición del paciente, tipo de incisión, disección, tiempos operatorios, hemostasia y cierre por planos anatómicos..."></textarea>
                 </div>
             </div>
 
