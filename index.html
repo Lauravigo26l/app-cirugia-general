@@ -19,40 +19,37 @@
             </p>
         </div>
         <div class="user-info">
-            <span>🔴 Guardia Activa &bull; Censo Dinámico</span>
+            <span>🔴 Guardia Activa &bull; Censo en Tiempo Real</span>
         </div>
     </header>
 
     <!-- Barra de Navegación Principal -->
     <nav class="nav-bar">
         <button class="nav-btn active" data-tab="torre">📊 Torre de Control & Camas</button>
-        <button class="nav-btn" data-tab="hospitalizacion">🏥 Ficha Clínica: Ingreso & Comorbilidades</button>
+        <button class="nav-btn" data-tab="hospitalizacion">🏥 Ficha Clínica: Anamnesis & Comorbilidades</button>
     </nav>
 
-    <!-- 1. TORRE DE CONTROL Y CAMAS (Propias, Prestadas Múltiples y URPA) -->
+    <!-- 1. TORRE DE CONTROL Y CAMAS -->
     <main id="seccion-torre" class="vista-seccion">
         <div class="section-header">
-            <h3 style="margin:0; color: #be185d;">🛏️ CENSO OFICIAL Y CAMAS (218-A a 224-B)</h3>
-            <div style="display: flex; gap: 10px;">
-                <button id="btn-prestar-cama" class="btn-pink" style="background-color: #0284c7;">+ Añadir Cama Prestada</button>
-                <button id="btn-urpa-cama" class="btn-pink" style="background-color: #d97706;">+ Añadir Paciente en URPA</button>
-            </div>
+            <h3 style="margin:0; color: #be185d;">🛏️ CENSO OFICIAL Y CAMAS (218-A a 224-B + URPA + Prestadas)</h3>
+            <button id="btn-ingreso-general" class="btn-pink">+ Ingresar Paciente / URPA / Prestada</button>
         </div>
         <div id="grid-camas" class="grid-container"></div>
     </main>
 
-    <!-- 2. FICHA CLÍNICA: MÓDULO 1 (Anamnesis, FFVV, Comorbilidades, Cirugías Previas) -->
+    <!-- 2. FICHA CLÍNICA: MÓDULO 1 (Anamnesis, Comorbilidades, Quirúrgicos Estructurados) -->
     <main id="seccion-hospitalizacion" class="vista-seccion" style="display: none;">
         <div class="paciente-detalle-container" style="max-width: 950px; margin: 0 auto;">
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h3 style="color: #be185d; margin:0;" id="titulo-ficha-paciente">📋 Ficha de Ingreso y Anamnesis</h3>
-                <button class="btn-pink" onclick="alert('📷 IA OCR: Analizando documento físico...')">📷 Escanear con IA</button>
+                <button class="btn-pink" onclick="alert('📷 IA OCR: Escaneando hoja física y extrayendo parámetros clínicos...')">📷 Escanear con IA</button>
             </div>
 
-            <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES MODIFICABLES -->
+            <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES -->
             <div class="clinical-box">
-                <h4>🩺 Motivo de Ingreso, Tiempo y Funciones Vitales</h4>
+                <h4>🩺 Motivo de Ingreso, Tiempo y Funciones Vitales (Modificables)</h4>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
                     <div>
                         <label>Motivo de Ingreso / Síntoma Principal:</label>
@@ -67,14 +64,12 @@
                 <label style="margin-top: 10px; display:block;">Relato Cronológico / Anamnesis Detallada:</label>
                 <textarea id="m1-relato" rows="3" placeholder="Paciente refiere cuadro clínico caracterizado por..."></textarea>
 
-                <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (Modificables)</h4>
-                <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
+                <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (Predeterminadas y Modificables)</h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
                     <div><label>PA (mmHg):</label><input type="text" id="m1-pa" value="120/80"></div>
                     <div><label>FC (lpm):</label><input type="text" id="m1-fc" value="80"></div>
                     <div><label>FR (rpm):</label><input type="text" id="m1-fr" value="18"></div>
                     <div><label>T° (°C):</label><input type="text" id="m1-t" value="36.8"></div>
-                    <div><label>SatO2 (%):</label><input type="text" id="m1-sat" value="98%"></div>
-                    <div><label>Glasgow:</label><input type="text" id="m1-glasgow" value="15"></div>
                 </div>
             </div>
 
@@ -93,8 +88,8 @@
                         </select>
                     </div>
                     <div>
-                        <label>Destino / Observaciones de Cama:</label>
-                        <input type="text" id="m1-destino" placeholder="Ej. Paciente prestado de Traumatología">
+                        <label>Destino / Cama / Observaciones:</label>
+                        <input type="text" id="m1-destino" placeholder="Ej. Retenido en URPA / Cama Prestada de Traumatología">
                     </div>
                 </div>
             </div>
@@ -102,45 +97,42 @@
             <!-- SECCIÓN C: COMORBILIDADES CON TRATAMIENTO ESPECÍFICO -->
             <div class="clinical-box">
                 <h4>🗂️ Comorbilidades Crónicas por Sistemas y Tratamiento</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
                     <div>
                         <label><input type="checkbox" id="chk-hta"> 🫀 Hipertensión Arterial (HTA)</label>
-                        <input type="text" id="trat-hta" placeholder="Tratamiento: Ej. Losartán 50mg c/12h">
+                        <input type="text" id="trat-hta" placeholder="Tratamiento: Ej. Losartán 50mg c/12h" style="margin-top:4px;">
                     </div>
                     <div>
                         <label><input type="checkbox" id="chk-dm2"> 🩸 Diabetes Mellitus Tipo 2 (DM2)</label>
-                        <input type="text" id="trat-dm2" placeholder="Tratamiento: Ej. Metformina 850mg c/12h">
+                        <input type="text" id="trat-dm2" placeholder="Tratamiento: Ej. Metformina 850mg c/12h" style="margin-top:4px;">
                     </div>
                     <div>
                         <label><input type="checkbox" id="chk-irc"> ⚠️ Insuficiencia Renal Crónica (IRC)</label>
-                        <input type="text" id="trat-irc" placeholder="Tratamiento / Estadio / Diálisis">
+                        <input type="text" id="trat-irc" placeholder="Tratamiento / Estadio / Diálisis" style="margin-top:4px;">
                     </div>
                     <div>
                         <label><input type="checkbox" id="chk-epoc"> 🌬️ EPOC / Asma Bronquial</label>
-                        <input type="text" id="trat-epoc" placeholder="Tratamiento inhalatorio">
+                        <input type="text" id="trat-epoc" placeholder="Tratamiento inhalatorio" style="margin-top:4px;">
                     </div>
                 </div>
             </div>
 
             <!-- SECCIÓN D: ANTECEDENTES QUIRÚRGICOS ESTRUCTURADOS -->
             <div class="clinical-box">
-                <h4>✂️ Antecedentes Quirúrgicos Estructurados</h4>
-                <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Detalle de cirugías previas con sus respectivos ítems de complicaciones:</p>
-                
-                <div id="contenedor-cirugias-previas">
-                    <!-- Se gestiona dinámicamente o por campos claros -->
+                <h4>✂️ Antecedentes Quirúrgicos Previos (Estructurados)</h4>
+                <div style="display: grid; grid-template-columns: 2fr 1fr 2fr 1fr; gap: 8px; margin-top: 8px;">
+                    <div><label style="font-size:11px;">Cirugía Realizada:</label><input type="text" id="aq-cirugia" placeholder="Ej. Apendicectomía"></div>
+                    <div><label style="font-size:11px;">Año:</label><input type="text" id="aq-anio" placeholder="2021"></div>
+                    <div><label style="font-size:11px;">Hospital / Lugar:</label><input type="text" id="aq-lugar" placeholder="Hospital Tarapoto"></div>
+                    <div><label style="font-size:11px;">¿Complicaciones?:</label>
+                        <select id="aq-comp-si">
+                            <option value="No">No</option>
+                            <option value="Sí">Sí</option>
+                        </select>
+                    </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 8px; margin-top: 10px;">
-                    <input type="text" id="iq-nombre" placeholder="Nombre de Cirugía (Ej. Apendicectomía)">
-                    <input type="text" id="iq-anio" placeholder="Año (Ej. 2020)">
-                    <select id="iq-comp-si">
-                        <option value="Sin Complicaciones">Sin Complicaciones</option>
-                        <option value="Con Complicaciones">Con Complicaciones</option>
-                    </select>
-                    <input type="text" id="iq-detalle-comp" placeholder="Descripción de complicación">
-                </div>
-                <button type="button" class="btn-pink" style="margin-top: 8px; background-color: #475569; padding: 6px 12px; font-size: 12px;" onclick="agregarAntecedenteQx()">+ Añadir a la lista</button>
-                <div id="lista-ant-qx-registrados" style="margin-top: 10px; font-size: 13px; color: #be185d; font-weight: bold;"></div>
+                <label style="margin-top: 8px; display:block;">Detalle de Complicaciones (si aplica):</label>
+                <input type="text" id="aq-detalle-comp" placeholder="Ej. Infección de sitio quirúrgico tratada ambulatoriamente">
             </div>
 
             <!-- SECCIÓN E: ALERGIAS Y ANTICOAGULANTES -->
@@ -149,33 +141,48 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 10px;">
                     <div style="background: #fff1f2; padding: 10px; border-radius: 8px; border: 1px solid #fda4af;">
                         <label style="color: #9f1239; font-weight: bold;">⚠️ Alergias Medicamentosas (RAMS):</label>
-                        <input type="text" id="m1-alergias" placeholder="Ej. Penicilina (Rash cutáneo severo)" style="background: white;">
+                        <input type="text" id="m1-alergias" placeholder="Ej. Penicilina (Genera rash cutáneo)" style="background: white;">
                     </div>
                     <div style="background: #eff6ff; padding: 10px; border-radius: 8px; border: 1px solid #bfdbfe;">
                         <label style="color: #1e40af; font-weight: bold;">🩸 Anticoagulantes / Antiagregantes:</label>
-                        <input type="text" id="m1-anticoag" placeholder="Ej. Aspirina (Susp. hace 7 días)" style="background: white;">
+                        <input type="text" id="m1-anticoag" placeholder="Ej. Aspirina (Última toma hace 7 días)" style="background: white;">
                     </div>
                 </div>
             </div>
 
-            <button class="btn-pink" id="btn-guardar-m1" style="margin-top: 15px; width: 100%; padding: 12px; font-size: 15px;">💾 Guardar Ficha Clínica Integral</button>
+            <button class="btn-pink" id="btn-guardar-m1" style="margin-top: 15px; width: 100%; padding: 12px; font-size: 15px;">💾 Guardar Ficha Clínica Integral del Paciente</button>
         </div>
     </main>
 
-    <!-- MODAL DE ASIGNACIÓN RÁPIDA -->
+    <!-- MODAL DE INGRESO RÁPIDO DE CAMA (Con opción de URPA y Camas Prestadas) -->
     <div id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
-        <div class="modal-content" style="background:white; width:90%; max-width:450px; margin:10% auto; padding:25px; border-radius:12px;">
+        <div class="modal-content" style="background:white; width:90%; max-width:480px; margin:8% auto; padding:25px; border-radius:12px;">
             <span id="cerrar-modal" style="float:right; font-size:24px; cursor:pointer;">&times;</span>
-            <h3 style="color:#be185d; margin-top:0;" id="modal-titulo-tipo">➕ Asignación de Cama</h3>
-            <label style="font-weight:bold;">Ubicación:</label>
-            <input type="text" id="modal-ubicacion" readonly style="background: #f8fafc; font-weight: bold;">
-            <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres:</label>
+            <h3 style="color:#be185d; margin-top:0;">➕ Asignación de Cama / URPA / Prestada</h3>
+            <label style="font-weight:bold;">Seleccionar Tipo de Ubicación:</label>
+            <select id="modal-tipo-ubicacion" style="width:100%; padding:8px; margin-top:5px;" onchange="actualizarSelectorUbicaciones()">
+                <option value="oficial">Cama Propia de Servicio (218-A a 224-B)</option>
+                <option value="urpa">Paciente Retenido en URPA</option>
+                <option value="prestada">Cama Prestada de Servicio Vecino (Ej. Traumatología)</option>
+            </select>
+
+            <div id="contenedor-selector-cama" style="margin-top:10px;">
+                <label style="font-weight:bold;">Seleccionar Cama Específica:</label>
+                <select id="modal-select-cama" style="width:100%; padding:8px; margin-top:5px;"></select>
+            </div>
+
+            <div id="contenedor-texto-libre" style="margin-top:10px; display:none;">
+                <label style="font-weight:bold;" id="label-texto-libre">Indique ubicación (Ej. URPA-02 o Traumatología-Cama 310):</label>
+                <input type="text" id="modal-ubicacion-libre" placeholder="Escribir ubicación exacta">
+            </div>
+
+            <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres del Paciente:</label>
             <input type="text" id="modal-nombre" placeholder="Ej. Pérez Gómez, Juan">
             <label style="font-weight:bold; margin-top:10px; display:block;">Historia Clínica (HC):</label>
             <input type="text" id="modal-hc" placeholder="Número de HC">
-            <label style="font-weight:bold; margin-top:10px; display:block;">Diagnóstico Principal:</label>
-            <input type="text" id="modal-dx" placeholder="Ej. Apendicitis Aguda">
-            <button id="modal-btn-guardar" class="btn-pink" style="margin-top:20px; width:100%;">Registrar Paciente</button>
+            <label style="font-weight:bold; margin-top:10px; display:block;">Diagnóstico Principal / Post-Op:</label>
+            <input type="text" id="modal-dx" placeholder="Ej. Apendicitis Aguda Flegmonosa">
+            <button id="modal-btn-guardar" class="btn-pink" style="margin-top:20px; width:100%;">Registrar y Abrir Ficha</button>
         </div>
     </div>
 
