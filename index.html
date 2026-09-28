@@ -19,7 +19,7 @@
             </p>
         </div>
         <div class="user-info">
-            <span>🔴 Guardia Activa &bull; Censo en Tiempo Real</span>
+            <span>🔴 Guardia Activa &bull; Censo Dinámico</span>
         </div>
     </header>
 
@@ -29,16 +29,16 @@
         <button class="nav-btn" data-tab="hospitalizacion">🏥 Ficha Clínica: Anamnesis & Comorbilidades</button>
     </nav>
 
-    <!-- 1. TORRE DE CONTROL Y CAMAS -->
+    <!-- 1. TORRE DE CONTROL Y CAMAS (Con soporte multi-URPA y multi-Traumatología) -->
     <main id="seccion-torre" class="vista-seccion">
         <div class="section-header">
-            <h3 style="margin:0; color: #be185d;">🛏️ CENSO OFICIAL Y CAMAS (218-A a 224-B + Prestadas / URPA)</h3>
-            <button id="btn-ingreso-general" class="btn-pink">+ Ingresar Nuevo Paciente</button>
+            <h3 style="margin:0; color: #be185d;">🛏️ CENSO OFICIAL Y CAMAS (218-A a 224-B + Traumatología / URPA)</h3>
+            <button id="btn-ingreso-general" class="btn-pink">+ Registrar Paciente / Cama Prestada</button>
         </div>
         <div id="grid-camas" class="grid-container"></div>
     </main>
 
-    <!-- 2. FICHA CLÍNICA: MÓDULO 1 (Anamnesis, Comorbilidades, Tratamientos, Quirúrgicos) -->
+    <!-- 2. FICHA CLÍNICA: MÓDULO 1 (Anamnesis mejorada y Antecedentes Quirúrgicos estructurados) -->
     <main id="seccion-hospitalizacion" class="vista-seccion" style="display: none;">
         <div class="paciente-detalle-container" style="max-width: 950px; margin: 0 auto;">
             
@@ -47,7 +47,7 @@
                 <button class="btn-pink" onclick="alert('📷 IA OCR: Escaneando hoja física y extrayendo anamnesis y funciones vitales...')">📷 Escanear con IA</button>
             </div>
 
-            <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES -->
+            <!-- SECCIÓN A: ANAMNESIS Y FUNCIONES VITALES (Con valores editables probables) -->
             <div class="clinical-box">
                 <h4>🩺 Motivo de Ingreso, Tiempo y Funciones Vitales</h4>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px;">
@@ -64,12 +64,12 @@
                 <label style="margin-top: 10px; display:block;">Relato Cronológico / Anamnesis Detallada:</label>
                 <textarea id="m1-relato" rows="3" placeholder="Paciente refiere cuadro clínico caracterizado por..."></textarea>
 
-                <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (FFVV)</h4>
+                <h4 style="margin-top: 15px;">📊 Funciones Vitales de Ingreso (FFVV - Valores editables)</h4>
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                    <div><label>PA (mmHg):</label><input type="text" id="m1-pa" placeholder="120/80"></div>
-                    <div><label>FC (lpm):</label><input type="text" id="m1-fc" placeholder="88"></div>
-                    <div><label>FR (rpm):</label><input type="text" id="m1-fr" placeholder="18"></div>
-                    <div><label>T° (°C):</label><input type="text" id="m1-t" placeholder="38.2"></div>
+                    <div><label>PA (mmHg):</label><input type="text" id="m1-pa" value="120/80"></div>
+                    <div><label>FC (lpm):</label><input type="text" id="m1-fc" value="80"></div>
+                    <div><label>FR (rpm):</label><input type="text" id="m1-fr" value="18"></div>
+                    <div><label>T° (°C):</label><input type="text" id="m1-t" value="37.0"></div>
                 </div>
             </div>
 
@@ -117,10 +117,24 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN D: ANTECEDENTES QUIRÚRGICOS (SEPARADOS) -->
+            <!-- SECCIÓN D: ANTECEDENTES QUIRÚRGICOS ESTRUCTURADOS -->
             <div class="clinical-box">
-                <h4>✂️ Antecedentes Quirúrgicos Previos</h4>
-                <textarea id="m1-ant-quirurgicos" rows="3" placeholder="Detallar cirugías previas, año y lugar..."></textarea>
+                <h4>✂️ Antecedentes Quirúrgicos Previos (Estructurados)</h4>
+                <div style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-top: 10px;">
+                    <div>
+                        <label>Nombre de la Cirugía:</label>
+                        <input type="text" id="qx-ant-nombre" placeholder="Ej. Apendicectomía / Hernioplastia">
+                    </div>
+                    <div>
+                        <label>Año:</label>
+                        <input type="text" id="qx-ant-anio" placeholder="Ej. 2021">
+                    </div>
+                    <div>
+                        <label>Complicaciones:</label>
+                        <input type="text" id="qx-ant-complicacion" placeholder="Ej. Infección de herida / Ninguna">
+                    </div>
+                </div>
+                <textarea id="m1-ant-quirurgicos-extra" rows="2" placeholder="Observaciones adicionales de cirugías previas..." style="margin-top: 10px;"></textarea>
             </div>
 
             <!-- SECCIÓN E: ALERGIAS Y ANTICOAGULANTES -->
@@ -142,13 +156,22 @@
         </div>
     </main>
 
-    <!-- MODAL DE INGRESO RÁPIDO DE CAMA -->
+    <!-- MODAL DE INGRESO RÁPIDO DE CAMA / MULTI-URPA / MULTI-TRAUMATOLOGÍA -->
     <div id="modal-ingreso" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
         <div class="modal-content" style="background:white; width:90%; max-width:450px; margin:10% auto; padding:25px; border-radius:12px;">
             <span id="cerrar-modal" style="float:right; font-size:24px; cursor:pointer;">&times;</span>
             <h3 style="color:#be185d; margin-top:0;">➕ Asignación de Cama / Paciente</h3>
-            <label style="font-weight:bold;">Seleccionar Ubicación:</label>
-            <select id="modal-select-cama" style="width:100%; padding:8px; margin-top:5px;"></select>
+            <label style="font-weight:bold;">Seleccionar Tipo de Ubicación:</label>
+            <select id="modal-select-tipo" style="width:100%; padding:8px; margin-top:5px;" onchange="actualizarSelectorUbicacion()">
+                <option value="oficial">Cama Oficial del Servicio (218-A a 224-B)</option>
+                <option value="trauma">Cama Prestada de Traumatología</option>
+                <option value="urpa">Paciente Retenido en URPA</option>
+            </select>
+            
+            <div id="contenedor-selector-especifico" style="margin-top: 10px;">
+                <!-- Dinámico por JS -->
+            </div>
+
             <label style="font-weight:bold; margin-top:10px; display:block;">Apellidos y Nombres:</label>
             <input type="text" id="modal-nombre" placeholder="Ej. Pérez Gómez, Juan">
             <label style="font-weight:bold; margin-top:10px; display:block;">Historia Clínica (HC):</label>
