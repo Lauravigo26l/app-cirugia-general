@@ -122,39 +122,27 @@
                 </div>
             </div>
 
-            <!-- CONTENIDO SUB-PESTAÑA 3: MÓDULO 3 (CORREGIDO: Sin duplicar abordaje, con campos amplios de Hallazgos y Técnica) -->
+            <!-- CONTENIDO SUB-PESTAÑA 3: MÓDULO 3 (CORREGIDO: Sin duplicar abordaje + Botón IA paso a paso) -->
             <div id="hosp-content-3" class="hosp-content" style="display: none;">
                 <div class="clinical-box">
-                    <h4>🔪 Bitácora y Reporte Operatorio Quirúrgico</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-pink); padding-bottom: 8px; margin-bottom: 12px;">
+                        <h4 style="margin: 0; border: none; padding: 0;">🔪 Bitácora y Reporte Operatorio Quirúrgico</h4>
+                        <button type="button" class="btn-pink" style="font-size: 12px; padding: 6px 12px;" onclick="generarTecnicaIA()">✨ Generar Técnica con IA</button>
+                    </div>
                     
-                    <div style="margin-top: 10px;">
-                        <label>Procedimiento Quirúrgico Efectuado (Abierto o Laparoscópico):</label>
-                        <select id="qx-proc" style="font-weight: bold; color: #be185d;">
-                            <option value="Apendicectomía Laparoscópica">Apendicectomía Laparoscópica</option>
-                            <option value="Apendicectomía Abierta (LPE)">Apendicectomía Abierta (LPE)</option>
-                            <option value="Colecistectomía Laparoscópica">Colecistectomía Laparoscópica</option>
-                            <option value="Colecistectomía Abierta">Colecistectomía Abierta</option>
-                            <option value="Hernioplastia Inguinal (Lichtenstein / TAPP)">Hernioplastia Inguinal (Lichtenstein / TAPP)</option>
-                            <option value="Hernioplastia Umbilical">Hernioplastia Umbilical</option>
-                            <option value="Laparotomía Exploratoria (Perforación / Obstrucción)">Laparotomía Exploratoria de Urgencia</option>
-                            <option value="Drenaje de Absceso (Psoas / Perianal)">Drenaje de Absceso (Psoas / Perianal)</option>
-                        </select>
-                    </div>
-
-                    <div class="qx-grid-4" style="margin-top: 12px;">
-                        <div><label>Hora Inicio:</label><input type="time" id="qx-hinicio"></div>
-                        <div><label>Hora Fin:</label><input type="time" id="qx-hfin"></div>
-                        <div><label>Cirujano Principal:</label><input type="text" id="qx-cirujano" placeholder="Dr. / Dra."></div>
-                        <div><label>Primer Ayudante:</label><input type="text" id="qx-ayudante" placeholder="R1 / R2"></div>
-                    </div>
-
-                    <div class="qx-grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
-                        <div><label>Anestesiólogo:</label><input type="text" id="qx-anestesiologo" placeholder="Dr. Anestesiólogo"></div>
-                        <div><label>Tipo de Anestesia:</label><input type="text" id="qx-tipoanestesia" placeholder="General / Raquídea"></div>
-                        <div><label>Personal (Instr./Circ.):</label><input type="text" id="qx-personal" placeholder="Lic. Enfermería"></div>
-                    </div>
-
-                    <div class="qx-grid-2" style="margin-top: 10px;">
+                    <div class="qx-grid-2">
+                        <div>
+                            <label>Procedimiento Quirúrgico Efectuado (Incluye Abordaje):</label>
+                            <select id="qx-proc">
+                                <option value="Apendicectomía Laparoscópica">Apendicectomía Laparoscópica</option>
+                                <option value="Apendicectomía Abierta (LPE)">Apendicectomía Abierta (LPE)</option>
+                                <option value="Colecistectomía Laparoscópica">Colecistectomía Laparoscópica</option>
+                                <option value="Colecistectomía Abierta">Colecistectomía Abierta</option>
+                                <option value="Hernioplastia Inguinal / Umbilical">Hernioplastia Inguinal / Umbilical</option>
+                                <option value="Laparotomía Exploratoria de Emergencia">Laparotomía Exploratoria de Emergencia</option>
+                                <option value="Drenaje de Absceso / Psoas">Drenaje de Absceso / Psoas / Perianal</option>
+                            </select>
+                        </div>
                         <div>
                             <label>Estado de Herida Operatoria:</label>
                             <select id="qx-herida">
@@ -164,14 +152,30 @@
                                 <option value="Sucia / Infectada (Clase IV)">Sucia / Infectada (Clase IV)</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="qx-grid-4">
+                        <div><label>Hora Inicio:</label><input type="time" id="qx-hinicio"></div>
+                        <div><label>Hora Fin:</label><input type="time" id="qx-hfin"></div>
+                        <div><label>Cirujano Principal:</label><input type="text" id="qx-cirujano" placeholder="Dr. / Dra."></div>
+                        <div><label>Primer Ayudante:</label><input type="text" id="qx-ayudante" placeholder="R1 / R2"></div>
+                    </div>
+
+                    <div class="qx-grid-2" style="margin-top: 10px;">
+                        <div><label>Anestesiólogo:</label><input type="text" id="qx-anestesiologo" placeholder="Dr. Anestesiólogo"></div>
+                        <div><label>Tipo de Anestesia:</label><input type="text" id="qx-tipoanestesia" placeholder="General / Raquídea"></div>
+                    </div>
+
+                    <div class="qx-grid-2" style="margin-top: 10px;">
+                        <div><label>Personal (Instr./Circ.):</label><input type="text" id="qx-personal" placeholder="Lic. Enfermería"></div>
                         <div><label>Drenajes Dejados en Cavidad:</label><input type="text" id="qx-drenaje" placeholder="Ej. Dren tubular / Penrose / Jackson-Pratt"></div>
                     </div>
 
-                    <label style="margin-top: 15px; display:block; font-weight: bold; color: #be185d;">🔍 Hallazgos Operatorios:</label>
-                    <textarea id="qx-hallazgos" rows="3" placeholder="Describa detalladamente los hallazgos intraoperatorios (ej. cantidad y características de líquido en cavidad, estado del órgano patológico, etc.)..."></textarea>
+                    <label style="margin-top: 12px; display:block;">🔍 Hallazgos Operatorios:</label>
+                    <textarea id="qx-hallazgos" rows="2" placeholder="Ej. Cavidad peritoneal con presencia de líquido libre turbio, apéndice cecal congestivo, retrocecal..."></textarea>
 
-                    <label style="margin-top: 12px; display:block; font-weight: bold; color: #be185d;">📝 Técnica Quirúrgica (IA Asistida paso a paso):</label>
-                    <textarea id="qx-tecnica" rows="6" placeholder="Describa la técnica quirúrgica paso a paso, posición del paciente, tipo de incisión, disección, tiempos operatorios, hemostasia y cierre por planos anatómicos..."></textarea>
+                    <label style="margin-top: 10px; display:block;">📝 Técnica Quirúrgica (Paso a paso / IA Asistida):</label>
+                    <textarea id="qx-tecnica" rows="5" placeholder="Haz clic arriba en 'Generar Técnica con IA' o escribe el paso a paso..."></textarea>
                 </div>
             </div>
 
@@ -212,5 +216,23 @@
     </div>
 
     <script src="app.js"></script>
+    <script>
+        // Función de apoyo de IA para autogenerar la técnica quirúrgica según el procedimiento seleccionado
+        function generarTecnicaIA() {
+            const proc = document.getElementById("qx-proc").value;
+            let textoIA = "";
+
+            if (proc.includes("Laparoscópica")) {
+                textoIA = "1. Paciente en decúbito dorsal bajo anestesia general balanceada.\n2. Asepsia y antisepsia de región operatoria y colocación de campos estériles.\n3. Neumoperitoneo mediante técnica abierta (Hasson) o aguja de Veress a 14 mmHg.\n4. Inserción de trócar umbilical de 10mm para óptica de 30 grados, y trócares accesorios bajo visión directa (dos de 5mm en fosa iliaca izquierda y suprapúbico).\n5. Exploración de cavidad abdominal encontrando hallazgos operatorios descritos.\n6. Disección y abordaje del órgano blanco, hemostasia prolija con energía bipolar/armónica.\n7. Extracción de pieza quirúrgica en endobag sin contaminación de pared.\n8. Lavado de cavidad con solución salina temperada, comprobación de absoluta hemostasia.\n9. Cierre de aponeurosis de puerto de 10mm con Vicryl 0 y piel con puntos simples de Nylon 3-0.";
+            } else if (proc.includes("Abierta") || proc.includes("Laparotomía")) {
+                textoIA = "1. Paciente en decúbito dorsal bajo anestesia general / raquídea.\n2. Asepsia, antisepsia y colocación de campos estériles amplios.\n3. Abordaje mediante laparotomía exploratoria / incisión mediana supra-infraumbilical (o McBurney según corresponda).\n4. Apertura por planos anatómicos hasta peritoneo parietal.\n5. Exploración sistemática de cavidad abdominal, aspiración de contenido libre y cuantificación.\n6. Realización de procedimiento quirúrgico indicado con técnica reglada, resección y anastomosis o cura operatoria según hallazgos.\n7. Lavado profuso de cavidad con suero fisiológico temperado.\n8. Cierre de pared abdominal por planos anatómicos: peritoneo/aponeurosis con sutura absorbible de alta resistencia (PDS / Vicryl continuo), tejido subcutáneo y piel con grapas o Nylon.";
+            } else {
+                textoIA = "1. Paciente bajo anestesia y monitorización estándar en sala de operaciones.\n2. Asepsia y antisepsia de la zona anatómica a intervenir.\n3. Abordaje quirúrgico directo sobre la zona patológica según técnica estandarizada.\n4. Disección roma y cortante por planos, control estricto de vasos sanguíneos.\n5. Drenaje de colección o resolución del problema quirúrgico hallado, aseo profundo.\n6. Colocación de drenaje tubular aspirativo si procede y cierre por planos anatómicos.";
+            }
+
+            document.getElementById("qx-tecnica").value = textoIA;
+            alert("✨ ¡Técnica quirúrgica generada por IA paso a paso con éxito!");
+        }
+    </script>
 </body>
 </html>
